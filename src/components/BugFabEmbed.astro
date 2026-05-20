@@ -35,6 +35,16 @@
     border-radius: 4px;
   }
   .bug-fab-demo-notice strong { color: #212529; }
+
+  /* Cap the auto-expanded "Auto-Captured Context" body so it never
+     pushes the Submit button below the viewport. The form panel
+     already has overflow-y: auto, but capping the context body keeps
+     the metadata + a few errors visible while overflow scrolls inside
+     this box rather than the whole form. */
+  .bug-fab-context__body {
+    max-height: 200px;
+    overflow-y: auto;
+  }
 </style>
 
 <script is:inline>

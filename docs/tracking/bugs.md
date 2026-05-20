@@ -64,7 +64,10 @@ The parent's `viewer.viewer_router` is included at prefix `/admin/bug-reports`, 
 
 ### Workaround (this side, applied)
 
-`src/components/PublicWall.astro` now uses `/admin/bug-reports` (no slash) for both the iframe `src` and the caption link.
+Two layers from our side:
+
+1. `src/components/PublicWall.astro` uses `/admin/bug-reports` (no slash) for both the iframe `src` and the caption link — so the marketing site never originates a slashed request.
+2. `public/admin/bug-reports/index.html` is a tiny redirect shim that runs `location.replace("/admin/bug-reports")`. It catches inbound links that the marketing site doesn't control — specifically the viewer's own "Back to List" link, which renders with a trailing slash. The static mount picks up our shim for the slashed URL and bounces the visitor to the canonical no-slash route.
 
 ### Real fix (parent side, follow-up)
 

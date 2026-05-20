@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting…</title>
+    <!--
+      Workaround for BUG-002 (see SITE-BUG-FAB/docs/tracking/bugs.md).
+      The parent FastAPI viewer registers its index route at
+      `/admin/bug-reports` (no trailing slash). After the co-host, the
+      marketing-site static mount at `/` (html=True) intercepts the
+      `/admin/bug-reports/` (with-slash) variant before FastAPI's
+      `redirect_slashes` can fire, returning the StaticFiles 404. This
+      file sits at that exact path in marketing-dist so the static mount
+      serves it instead of 404'ing, and it bounces the visitor to the
+      canonical no-slash URL.
+
+      Triggered by the viewer's "Back to List" link (which renders with
+      a trailing slash) and any other inbound link using the slashed form.
+    -->
+    <meta http-equiv="refresh" content="0; url=/admin/bug-reports" />
+    <link rel="canonical" href="/admin/bug-reports" />
+    <script>
+      // Faster than meta refresh and preserves ?query + #hash if either
+      // ever appears on this URL form.
+      location.replace("/admin/bug-reports" + location.search + location.hash);
+    </script>
+    <style>
+      body {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        background: #0a0a0a;
+        color: #e8e6e1;
+        max-width: 40rem;
+        margin: 4rem auto;
+        padding: 0 1.5rem;
+      }
+      a {
+        color: #d4ff00;
+      }
+    </style>
+  </head>
+  <body>
+    <p>
+      Redirecting to <a href="/admin/bug-reports">/admin/bug-reports</a>…
+    </p>
+  </body>
+</html>
