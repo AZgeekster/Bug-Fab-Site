@@ -12,6 +12,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "sync:bugfab": "node scripts/sync-bug-fab.mjs",
+    "build:cohost": "node scripts/build-cohost.mjs",
     "format": "prettier --write ."
   },
   "dependencies": {

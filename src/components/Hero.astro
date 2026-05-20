@@ -30,7 +30,7 @@ import FakeCursors from "./FakeCursors.astro";
     </p>
 
     <div class="hero__cta" data-anim="hero-fade-up">
-      <a class="btn btn--primary" href="#install">
+      <a class="btn btn--primary" href="/playground">
         <span>Try the FAB</span>
         <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
           <path
@@ -223,10 +223,10 @@ import FakeCursors from "./FakeCursors.astro";
 
   @keyframes pulse {
     0% {
-      box-shadow: 0 0 0 0 color-mix(in srgb, var(--warm-amber) 65%, transparent);
+      box-shadow: 0 0 0 0 var(--amber-glow-65);
     }
     70% {
-      box-shadow: 0 0 0 14px color-mix(in srgb, var(--warm-amber) 0%, transparent);
+      box-shadow: 0 0 0 14px var(--amber-transparent);
     }
     100% {
       box-shadow: 0 0 0 0 transparent;

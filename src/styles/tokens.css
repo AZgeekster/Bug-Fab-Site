@@ -11,10 +11,19 @@
   --mute: #6f6a60; /* warm gray for labels */
   --mute-2: #44413c; /* hairlines */
   --accent: #d4ff00; /* acid lime — live thing / warning */
-  --accent-dim: color-mix(in srgb, var(--accent) 65%, transparent);
-  --accent-glow: color-mix(in srgb, var(--accent) 25%, transparent);
+  /* color-mix() avoided here because html2canvas v1.4.1 (vendored in the
+     bug-fab bundle) crashes on it during screenshot capture. Use plain
+     rgba() with the same numeric outcome instead. */
+  --accent-dim: rgba(212, 255, 0, 0.65);
+  --accent-glow: rgba(212, 255, 0, 0.25);
+  --accent-tint-3: rgba(212, 255, 0, 0.03);
+  --accent-tint-4: rgba(212, 255, 0, 0.04);
+  --accent-tint-6: rgba(212, 255, 0, 0.06);
   --accent-ink: #0a0a0a; /* text on accent */
   --warm-amber: #ff8a3d; /* used sparingly for "live" pulse */
+  --amber-tint-6: rgba(255, 138, 61, 0.06);
+  --amber-glow-65: rgba(255, 138, 61, 0.65);
+  --amber-transparent: rgba(255, 138, 61, 0);
 
   /* ── Type ────────────────────────────────────────────────────────── */
   --font-display: "Fraunces", Georgia, serif;

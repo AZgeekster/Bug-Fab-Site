@@ -76,15 +76,18 @@ Standard subfolders Andrew expects:
 - `docs/research/` — discovery output (currently 3 files from the 2026-05-19 launch). Not in Andrew's global standard but established for this project.
 - `docs/tracking/` — `status.md`, `todo.md`, `gaps.md`, `agent_log.md`. Not yet created here.
 
-## Where things stand (2026-05-19)
+## Where things stand (last update 2026-05-20)
 
-**The site is built and ready to deploy.** All 11 plan phases shipped in one session. Full per-phase status in `docs/plans/2026-05-19_build-bug-fab-site.md`. Highlights:
+> Read `.claude/PROJECT_STATE.md` first — it's the canonical session-resume snapshot.
+
+**The site is built and the FAB CORS bug is fixed.** All 11 plan phases shipped in the 2026-05-19 session as commit `096d173`; the 2026-05-20 same-origin proxy fix is the follow-up commit. Full per-phase status in `docs/plans/2026-05-19_build-bug-fab-site_DONE.md`. Highlights:
 
 - Astro 6.3.5 static site, single page, ~50 KB critical JS (GSAP + ScrollTrigger + Lenis), ~600 KB total with lazy iframe.
 - Specimen-drawer aesthetic — Fraunces display H1 + JetBrains Mono everywhere else, acid-lime `#d4ff00` accent on warm pitch-black, hand-drawn SVG beetle as brand totem.
-- **The actual Bug-Fab FAB widget runs live in the corner**, wired to `https://bug-fab.fly.dev/api/bug-reports`. Reports land in the public viewer.
+- **The actual Bug-Fab FAB widget runs live in the corner**, wired via a same-origin `/api/bug-reports` proxy (Vite dev proxy + nginx reverse_proxy in prod) to `https://bug-fab.fly.dev`. Reports land in the public viewer. The proxy is required because the upstream FastAPI app has no CORS middleware.
 - Awwwards moves: breathing aurora, drifting fake-user cursors with occasional "filed a bug" bubbles, cursor-tracked CSS 3D specimen card, animated lifecycle diagram, hover-pin feature tiles.
-- Deploy infra ready (`Dockerfile`, `nginx.conf`, `fly.toml` mirroring parent's sjc/shared/1/256). First deploy: `flyctl launch --no-deploy && flyctl deploy`.
+- **Co-hosted with the parent Bug-Fab app** on `bug-fab.fly.dev` (no second Fly app, no separate `bug-fab-site.fly.dev`). Marketing site at `/`, playground at `/playground/`. Parent's FastAPI app handles `/api/*`, `/admin/bug-reports/*`, `/bug-fab/static/*`. See `docs/plans/2026-05-20_cohost-handoff.md` for the parent-side wiring (3 small edits to main.py, Dockerfile, .gitignore — done from a parent-rooted Claude session, NOT this one).
+- Build + deploy: `npm run build:cohost` then `cd ../BUG-FAB/repo && flyctl deploy`.
 
 **To preview locally:** `npm run dev` → http://localhost:4321.
 

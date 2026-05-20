@@ -2,7 +2,13 @@
 import Container from "./Container.astro";
 import SectionHeader from "./SectionHeader.astro";
 
-const viewerUrl = "https://bug-fab.fly.dev/admin/bug-reports/";
+// Co-hosted with the FastAPI app at the same origin — relative URL works
+// in dev (Vite proxy forwards) and prod (same Fly machine serves both).
+// NOTE: no trailing slash. The marketing-site static mount at `/` catches
+// `/admin/bug-reports/` (with slash) before FastAPI's redirect_slashes can
+// fire, so we go directly to the canonical no-slash path. See
+// docs/tracking/bugs.md § BUG-002.
+const viewerUrl = "/admin/bug-reports";
 ---
 
 <section class="wall" id="wall" data-anim="reveal">
@@ -29,8 +35,8 @@ const viewerUrl = "https://bug-fab.fly.dev/admin/bug-reports/";
     </div>
 
     <p class="wall__caption aside">
-      live at <a href={viewerUrl} rel="noopener">bug-fab.fly.dev/admin/bug-reports/</a> · anyone can read
-      it · don't paste anything you wouldn't tweet
+      live at <a href={viewerUrl}>/admin/bug-reports</a> · anyone can read it · don't paste anything
+      you wouldn't tweet
     </p>
   </Container>
 </section>

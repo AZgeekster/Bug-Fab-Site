@@ -22,28 +22,18 @@ npm run build      # output to ./dist
 npm run preview    # serve dist locally
 ```
 
-## Deploy
+## Deploy (co-hosted with the parent Bug-Fab demo)
 
-First time only:
+This site is co-hosted on the **same Fly app** as the live Bug-Fab demo (`bug-fab.fly.dev`) to save a second machine. Marketing site at `/`, playground at `/playground/`, `/api/*` and `/admin/bug-reports/*` are owned by the parent's FastAPI app.
 
-```bash
-flyctl launch --no-deploy   # creates the app, assigns *.fly.dev domain
-```
-
-Every deploy after that:
+Deploy flow:
 
 ```bash
-npm run sync:bugfab   # refresh the bundle from ../BUG-FAB/repo (do this BEFORE Docker build, since the Docker context doesn't include the parent repo)
-flyctl deploy
+npm run build:cohost                    # build + sync dist/ → ../BUG-FAB/repo/marketing-dist/
+cd ../BUG-FAB/repo && flyctl deploy     # parent's existing flyctl pipeline ships the merged image
 ```
 
-Or use the wrapper:
-
-```bash
-./scripts/deploy.sh
-```
-
-The deploy ships a two-stage Docker build (Node 22 → nginx alpine) on a Fly shared/1/256 machine in `sjc`. Auto-stops when idle; first request after sleep is a 1–3s cold start. Same region + machine class as the parent Bug-Fab POC for operational consistency.
+**Before first deploy** the parent project needs to know how to serve `marketing-dist/`. See [`docs/plans/2026-05-20_cohost-handoff.md`](docs/plans/2026-05-20_cohost-handoff.md) for the three small edits to make in `BUG-FAB/repo/` (main.py + Dockerfile + .gitignore). Do those once, in a Claude session rooted in the parent.
 
 ## Layout
 

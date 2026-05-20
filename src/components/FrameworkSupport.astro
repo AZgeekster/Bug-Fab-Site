@@ -124,7 +124,7 @@ const statusMeta: Record<Status, { dot: string; label: string }> = {
     font-size: var(--t-xs);
     font-weight: 500;
     border-bottom: var(--hairline);
-    background: color-mix(in srgb, var(--accent) 3%, transparent);
+    background: var(--accent-tint-3);
   }
 
   .adapters__table tbody tr {
@@ -135,7 +135,7 @@ const statusMeta: Record<Status, { dot: string; label: string }> = {
     border-bottom: 0;
   }
   .adapters__table tbody tr:hover {
-    background: color-mix(in srgb, var(--accent) 4%, transparent);
+    background: var(--accent-tint-4);
   }
 
   .adapters__name {

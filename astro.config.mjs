@@ -1,12 +1,24 @@
 import { defineConfig, fontProviders } from "astro/config";
 
 export default defineConfig({
-  site: "https://bugfab-site.fly.dev",
+  site: "https://bug-fab.fly.dev",
   output: "static",
   trailingSlash: "never",
   build: {
     inlineStylesheets: "auto",
     assets: "_assets",
+  },
+  // Dev-mode reverse proxy: forward live API + viewer routes to the
+  // public Bug-Fab demo so dev mode matches production (where the
+  // FastAPI app and the marketing site share an origin).
+  vite: {
+    server: {
+      proxy: {
+        "/api": { target: "https://bug-fab.fly.dev", changeOrigin: true, secure: true },
+        "/admin": { target: "https://bug-fab.fly.dev", changeOrigin: true, secure: true },
+        "/playground": { target: "https://bug-fab.fly.dev", changeOrigin: true, secure: true },
+      },
+    },
   },
   fonts: [
     {
