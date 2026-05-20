@@ -1,33 +1,153 @@
 ---
-// Loads the synced Bug-Fab bundle and wires it to the live public demo at
-// bug-fab.fly.dev. Every report submitted here goes to the public viewer at
-// https://bug-fab.fly.dev/admin/bug-reports/ — that's a feature.
+// Loads the synced Bug-Fab bundle and wires it to the public demo's intake.
 //
-// The flag `window.BugFabAutoInit = false` MUST be set before the bundle
-// loads, otherwise the bundle auto-initializes with no submit URL.
+// Submission flow:
+//   - Production: this Astro site is mounted at `/` of the same FastAPI
+//     app that owns /api/bug-reports (co-hosted on bug-fab.fly.dev), so
+//     /api/bug-reports is genuinely same-origin.
+//   - Dev: Vite proxies /api → bug-fab.fly.dev so `npm run dev` mirrors
+//     production behavior without needing the FastAPI app running locally.
+//     See astro.config.mjs `vite.server.proxy`.
+//
+// Every report submitted here lands in the same public viewer the playground
+// uses: /admin/bug-reports/ (relative — same FastAPI app, same origin).
+//
+// Public-demo polish (mirrors the playground; same backend, same caps):
+//   - Auto-Captured Context section opens by default so visitors can see
+//     what the bundle captured without an extra click.
+//   - A "Public demo limits" notice is injected into the overlay so users
+//     know the rate / size ceilings before they submit.
+//   - The bundle's default error message is rewritten on 429/413/503 into
+//     a friendlier line that names the cap that was hit.
 ---
 
+<style is:inline>
+  /* Visible demo-limits notice injected into the FAB overlay at runtime.
+     Scoped class to avoid collisions with any consumer page styles. */
+  .bug-fab-demo-notice {
+    margin: 0 0 12px 0;
+    padding: 10px 12px;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: #495057;
+    background: #f1f3f5;
+    border-left: 3px solid #d4ff00;
+    border-radius: 4px;
+  }
+  .bug-fab-demo-notice strong { color: #212529; }
+</style>
+
 <script is:inline>
-  // Block the bundle's auto-init so we can supply our own config.
+  // Suppress the bundle's auto-init so our explicit init() controls config.
+  // Must be set BEFORE the bundle script tag is processed.
   window.BugFabAutoInit = false;
 </script>
 
-<script is:inline src="/bug-fab/static/bug-fab.js" defer></script>
+<script is:inline src="/bug-fab/static/bug-fab.js"></script>
 
 <script is:inline>
-  document.addEventListener("DOMContentLoaded", () => {
+  (function initBugFab() {
+    // Sync-loaded bundle has already executed; window.BugFab exists now.
+    // No DOMContentLoaded wait needed — keeps init off the critical path
+    // of the bundle's own DCL listener and avoids any ordering races.
     if (!window.BugFab) {
+      // Bundle failed to load (404, parse error). Surface in console so
+      // dev sees it; no UI fallback for v1.
       console.warn("[bug-fab-embed] bundle did not load; FAB unavailable");
       return;
     }
+
+    // The FAB overlay mounts asynchronously (after the html2canvas screenshot),
+    // so we watch the DOM and patch the rendered overlay each time it shows.
+    // Two patches:
+    //   1. Force the <details class="bug-fab-context"> open by default.
+    //   2. Inject a "Public demo limits" notice above the action buttons.
+    // Idempotent: we tag elements we've already touched so re-renders don't
+    // duplicate the notice or fight a user who manually collapsed the context.
+    const DEMO_NOTICE_HTML =
+      '<p class="bug-fab-demo-notice" data-bug-fab-demo-notice>' +
+      '<strong>Public demo limits:</strong> 5 reports per 15 minutes per IP, ' +
+      'max 2 MB per screenshot. Submissions are visible to anyone — ' +
+      'don’t paste anything you wouldn’t post on Twitter.' +
+      '</p>';
+
+    const patchOverlayNode = (root) => {
+      if (!(root instanceof Element)) return;
+
+      // (1) expand Auto-Captured Context by default.
+      const detailsEls = root.matches?.(".bug-fab-context")
+        ? [root]
+        : root.querySelectorAll?.(".bug-fab-context") ?? [];
+      for (const el of detailsEls) {
+        if (!el.dataset.bugFabAutoExpanded) {
+          el.open = true;
+          el.dataset.bugFabAutoExpanded = "1";
+        }
+      }
+
+      // (2) inject demo-limits notice once per overlay render. Anchored above
+      // the action buttons so it reads as a heads-up to "Submit" rather than
+      // a banner that gets lost above the fold.
+      const actions = root.matches?.(".bug-fab-actions")
+        ? root
+        : root.querySelector?.(".bug-fab-actions");
+      if (actions && !actions.previousElementSibling?.matches?.("[data-bug-fab-demo-notice]")) {
+        actions.insertAdjacentHTML("beforebegin", DEMO_NOTICE_HTML);
+      }
+    };
+
+    new MutationObserver((records) => {
+      for (const r of records) {
+        for (const node of r.addedNodes) {
+          patchOverlayNode(node);
+        }
+      }
+    }).observe(document.body, { childList: true, subtree: true });
+
+    // Map server-side abuse-cap responses to human-readable messages.
+    // The bundle re-throws the server's `detail` string as the Error message,
+    // so we match on that. Falls through to the bundle's default text when
+    // no rule matches.
+    const friendlyMessage = (raw) => {
+      if (!raw) return null;
+      const m = String(raw).toLowerCase();
+      if (m.includes("rate limit")) {
+        return (
+          "You’ve hit the public-demo rate limit (5 reports per 15 min). " +
+          "Wait a few minutes and try again."
+        );
+      }
+      if (m.includes("exceeds") || m.includes("too large") || m.includes("content too large")) {
+        return (
+          "That submission is too large for the public demo. Try a smaller " +
+          "screenshot or a shorter description."
+        );
+      }
+      if (m.includes("service unavailable") || m.includes("503")) {
+        return "The demo is temporarily unavailable. Please try again in a moment.";
+      }
+      return null;
+    };
+
     window.BugFab.init({
-      submitUrl: "https://bug-fab.fly.dev/api/bug-reports",
+      // Relative URL — same FastAPI app owns this route. See header for flow.
+      submitUrl: "/api/bug-reports",
       appVersion: "site-v1",
       categories: ["Bug", "Feedback", "Praise"],
       annotationColor: "#d4ff00",
       onSubmitError: (err) => {
         console.error("[bug-fab-embed] submit failed:", err);
+        // The bundle already painted err.message into the in-form error box.
+        // We rewrite it after-the-fact when we recognise an abuse-cap response.
+        const friendly = friendlyMessage(err && err.message);
+        if (friendly) {
+          const box = document.querySelector("[data-bug-fab-error]");
+          if (box) {
+            box.textContent = friendly;
+            box.hidden = false;
+          }
+        }
       },
     });
-  });
+  })();
 </script>
