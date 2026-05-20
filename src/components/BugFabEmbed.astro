@@ -22,13 +22,30 @@
 ---
 
 <style is:inline>
-  /* Visible demo-limits notice injected into the FAB overlay at runtime.
-     Scoped class to avoid collisions with any consumer page styles. */
+  /* Header row: the bundle's "Report a Bug" <h2> on the left, the
+     demo-limits notice on the right. The wrapper is injected at
+     runtime; align-items:center keeps the notice text vertically
+     centered against the title. */
+  .bug-fab-demo-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 0 0 16px 0;
+  }
+  .bug-fab-demo-header > h2 {
+    margin: 0 !important;
+    flex: 0 0 auto;
+  }
+
+  /* Compact-notice variant for the header position — smaller font,
+     tighter padding, takes whatever horizontal room is left next to
+     the title. The acid-lime left border keeps brand continuity. */
   .bug-fab-demo-notice {
-    margin: 0 0 12px 0;
-    padding: 10px 12px;
-    font-size: 0.8125rem;
-    line-height: 1.45;
+    flex: 1 1 auto;
+    margin: 0;
+    padding: 6px 10px;
+    font-size: 0.6875rem;
+    line-height: 1.35;
     color: #495057;
     background: #f1f3f5;
     border-left: 3px solid #d4ff00;
@@ -71,7 +88,8 @@
     // so we watch the DOM and patch the rendered overlay each time it shows.
     // Two patches:
     //   1. Force the <details class="bug-fab-context"> open by default.
-    //   2. Inject a "Public demo limits" notice above the action buttons.
+    //   2. Wrap the form panel's <h2> in a flex header that puts the
+    //      "Public demo limits" notice to the right of the title.
     // Idempotent: we tag elements we've already touched so re-renders don't
     // duplicate the notice or fight a user who manually collapsed the context.
     const DEMO_NOTICE_HTML =
@@ -95,14 +113,22 @@
         }
       }
 
-      // (2) inject demo-limits notice once per overlay render. Anchored above
-      // the action buttons so it reads as a heads-up to "Submit" rather than
-      // a banner that gets lost above the fold.
-      const actions = root.matches?.(".bug-fab-actions")
+      // (2) wrap the form panel's <h2> title + the notice in a flex
+      // header so the notice sits to the right of the title rather
+      // than as a full-width block above the buttons.
+      const formPanel = root.matches?.(".bug-fab-overlay__form-panel")
         ? root
-        : root.querySelector?.(".bug-fab-actions");
-      if (actions && !actions.previousElementSibling?.matches?.("[data-bug-fab-demo-notice]")) {
-        actions.insertAdjacentHTML("beforebegin", DEMO_NOTICE_HTML);
+        : root.querySelector?.(".bug-fab-overlay__form-panel");
+      if (formPanel) {
+        const h2 = formPanel.querySelector(":scope > h2");
+        if (h2 && !h2.dataset.bugFabHeaderPatched) {
+          h2.dataset.bugFabHeaderPatched = "1";
+          const header = document.createElement("div");
+          header.className = "bug-fab-demo-header";
+          h2.parentNode.insertBefore(header, h2);
+          header.appendChild(h2);
+          header.insertAdjacentHTML("beforeend", DEMO_NOTICE_HTML);
+        }
       }
     };
 
