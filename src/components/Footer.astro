@@ -1,0 +1,134 @@
+---
+import Container from "./Container.astro";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+// Read the synced bug-fab source SHA at build time (best-effort).
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const versionPath = path.resolve(__dirname, "../../public/bug-fab/version.txt");
+let bundleSha = "unknown";
+try {
+  bundleSha = fs.readFileSync(versionPath, "utf8").trim().slice(0, 7);
+} catch {
+  // version.txt may not exist on a fresh clone before predev runs
+}
+---
+
+<footer class="footer">
+  <Container>
+    <div class="footer__row">
+      <div class="footer__brand">
+        <p class="footer__sig display">vibe-coded by Andrew.</p>
+        <p class="footer__sig-aside aside">don't bash me.</p>
+      </div>
+
+      <ul class="footer__links">
+        <li>
+          <a href="https://github.com/AZgeekster/Bug-Fab" rel="noopener">github →</a>
+        </li>
+        <li>
+          <a href="https://github.com/AZgeekster/Bug-Fab/blob/main/LICENSE" rel="noopener"
+            >MIT license →</a
+          >
+        </li>
+        <li>
+          <a href="https://github.com/AZgeekster/Bug-Fab/tree/main/docs" rel="noopener">docs →</a>
+        </li>
+        <li>
+          <a href="https://bug-fab.fly.dev/" rel="noopener">live demo →</a>
+        </li>
+      </ul>
+    </div>
+
+    <p class="footer__meta">
+      <span class="footer__meta-item">
+        <span class="footer__meta-label">bundle</span>
+        <code>bug-fab.js@{bundleSha}</code>
+      </span>
+      <span class="footer__meta-item">
+        <span class="footer__meta-label">site</span>
+        <code>specimen-drawer build, no analytics, no cookies</code>
+      </span>
+    </p>
+  </Container>
+</footer>
+
+<style>
+  .footer {
+    padding-block: var(--s-8) var(--s-7);
+    border-top: var(--hairline);
+    margin-block-start: var(--s-8);
+  }
+
+  .footer__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s-6);
+    padding-block-end: var(--s-7);
+  }
+
+  .footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1);
+  }
+
+  .footer__sig {
+    font-size: var(--t-xl);
+    color: var(--fg);
+    line-height: 1;
+  }
+  .footer__sig-aside {
+    font-size: var(--t-md);
+    color: var(--mute);
+  }
+  .footer__sig-aside::before {
+    color: var(--accent);
+  }
+
+  .footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3) var(--s-5);
+    font-family: var(--font-mono);
+    font-size: var(--t-sm);
+  }
+
+  .footer__links a {
+    color: var(--fg-soft);
+    text-transform: lowercase;
+  }
+  .footer__links a:hover {
+    color: var(--accent);
+  }
+
+  .footer__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3) var(--s-6);
+    font-family: var(--font-mono);
+    font-size: var(--t-xs);
+    color: var(--mute);
+    border-top: var(--hairline);
+    padding-block-start: var(--s-4);
+  }
+
+  .footer__meta-item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--s-2);
+  }
+
+  .footer__meta-label {
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--mute-2);
+  }
+
+  .footer__meta code {
+    color: var(--fg-soft);
+  }
+</style>

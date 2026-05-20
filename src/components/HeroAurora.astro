@@ -1,0 +1,93 @@
+---
+// Specimen-jar glow — a single warm aurora orb behind the hero H1, gently
+// breathing on an 8s cycle. Reduced-motion users get a static glow.
+// Pure CSS, zero JS.
+---
+
+<div class="aurora" aria-hidden="true">
+  <div class="aurora__orb aurora__orb--accent"></div>
+  <div class="aurora__orb aurora__orb--warm"></div>
+  <div class="aurora__grain"></div>
+</div>
+
+<style>
+  .aurora {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .aurora__orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.55;
+    will-change: transform, opacity;
+  }
+
+  .aurora__orb--accent {
+    width: 56vmax;
+    height: 56vmax;
+    top: -18vmax;
+    left: -10vmax;
+    background: radial-gradient(circle at center, var(--accent) 0%, transparent 62%);
+    opacity: 0.18;
+  }
+
+  .aurora__orb--warm {
+    width: 42vmax;
+    height: 42vmax;
+    bottom: -16vmax;
+    right: -14vmax;
+    background: radial-gradient(circle at center, var(--warm-amber) 0%, transparent 60%);
+    opacity: 0.14;
+  }
+
+  /* Subtle film-grain texture so the dark isn't flat. SVG turbulence in a
+     data URL — no extra requests. */
+  .aurora__grain {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.9  0 0 0 0 0.9  0 0 0 0 0.9  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size: 160px 160px;
+    opacity: 0.045;
+    mix-blend-mode: overlay;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .aurora__orb--accent {
+      animation: orb-drift-a 22s ease-in-out infinite alternate;
+    }
+    .aurora__orb--warm {
+      animation: orb-drift-b 28s ease-in-out infinite alternate;
+    }
+  }
+
+  @keyframes orb-drift-a {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+      opacity: 0.18;
+    }
+    50% {
+      transform: translate3d(6vmax, 4vmax, 0) scale(1.08);
+      opacity: 0.24;
+    }
+    100% {
+      transform: translate3d(-3vmax, 8vmax, 0) scale(0.96);
+      opacity: 0.16;
+    }
+  }
+
+  @keyframes orb-drift-b {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+      opacity: 0.12;
+    }
+    100% {
+      transform: translate3d(-7vmax, -5vmax, 0) scale(1.1);
+      opacity: 0.18;
+    }
+  }
+</style>

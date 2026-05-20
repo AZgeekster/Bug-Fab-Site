@@ -1,0 +1,283 @@
+---
+import Container from "./Container.astro";
+import SectionHeader from "./SectionHeader.astro";
+
+const tabs = [
+  {
+    id: "html",
+    label: "<script> tag",
+    title: "Drop into any HTML page",
+    code: `<script src="/bug-fab/static/bug-fab.js"
+        data-submit-url="/api/bug-reports" defer></script>`,
+  },
+  {
+    id: "pip",
+    label: "pip install",
+    title: "Install the FastAPI reference adapter",
+    code: `# Pre-release — install from GitHub for now:
+pip install "bug-fab @ git+https://github.com/AZgeekster/Bug-Fab.git@main"
+
+# Once 0.1.0a1 lands on PyPI:
+pip install --pre bug-fab`,
+  },
+  {
+    id: "fastapi",
+    label: "FastAPI",
+    title: "Wire it into your app (≈15 lines)",
+    code: `from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from importlib.resources import files
+import bug_fab
+from bug_fab.routers import submit as submit_module
+
+app = FastAPI()
+
+storage = bug_fab.FileStorage(storage_dir="./bug_reports")
+submit_module.configure(storage=storage)
+
+app.include_router(bug_fab.submit_router, prefix="/api")
+app.include_router(bug_fab.viewer_router, prefix="/admin/bug-reports")
+
+static_dir = str(files("bug_fab").joinpath("static"))
+app.mount("/bug-fab/static", StaticFiles(directory=static_dir), name="bf")`,
+  },
+];
+---
+
+<section class="install" id="install" data-anim="reveal">
+  <Container>
+    <SectionHeader
+      label="Install"
+      heading="Three lines, depending on what you're holding."
+      aside="The vanilla-JS bundle works against any backend that implements the protocol. The Python package is the reference."
+    />
+
+    <div class="tabs" data-install-tabs>
+      <div class="tabs__list" role="tablist" aria-label="Install methods">
+        {
+          tabs.map((t, i) => (
+            <button
+              type="button"
+              role="tab"
+              id={`tab-${t.id}`}
+              aria-controls={`panel-${t.id}`}
+              aria-selected={i === 0 ? "true" : "false"}
+              tabindex={i === 0 ? 0 : -1}
+              class="tabs__btn"
+              data-tab={t.id}
+            >
+              {t.label}
+            </button>
+          ))
+        }
+      </div>
+
+      {
+        tabs.map((t, i) => (
+          <div
+            class="tabs__panel"
+            role="tabpanel"
+            id={`panel-${t.id}`}
+            aria-labelledby={`tab-${t.id}`}
+            data-panel={t.id}
+            hidden={i !== 0}
+          >
+            <div class="tabs__panel-head">
+              <p class="tabs__title">{t.title}</p>
+              <button
+                type="button"
+                class="tabs__copy"
+                data-copy-btn
+                data-copy-source={t.id}
+                aria-label="Copy snippet"
+              >
+                <span class="tabs__copy-label">copy</span>
+              </button>
+            </div>
+            <pre class="tabs__code" data-code-for={t.id}>
+              <code>{t.code}</code>
+            </pre>
+          </div>
+        ))
+      }
+    </div>
+  </Container>
+</section>
+
+<script>
+  // Tabbed install snippet — vanilla, no framework.
+  // Handles tab switching + clipboard copy + small "copied!" pulse.
+  const root = document.querySelector<HTMLElement>("[data-install-tabs]");
+  if (root) {
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>(".tabs__btn"));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>("[data-panel]"));
+
+    const activate = (id: string) => {
+      for (const b of buttons) {
+        const on = b.dataset.tab === id;
+        b.setAttribute("aria-selected", on ? "true" : "false");
+        b.tabIndex = on ? 0 : -1;
+      }
+      for (const p of panels) {
+        p.hidden = p.dataset.panel !== id;
+      }
+    };
+
+    for (const b of buttons) {
+      b.addEventListener("click", () => activate(b.dataset.tab!));
+      b.addEventListener("keydown", (e) => {
+        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+        const i = buttons.indexOf(b);
+        const next =
+          buttons[(i + (e.key === "ArrowRight" ? 1 : -1) + buttons.length) % buttons.length];
+        next.focus();
+        activate(next.dataset.tab!);
+      });
+    }
+
+    for (const btn of root.querySelectorAll<HTMLButtonElement>("[data-copy-btn]")) {
+      btn.addEventListener("click", async () => {
+        const id = btn.dataset.copySource!;
+        const code = root.querySelector<HTMLElement>(`[data-code-for="${id}"]`)?.innerText ?? "";
+        try {
+          await navigator.clipboard.writeText(code.trim());
+          const label = btn.querySelector(".tabs__copy-label");
+          if (label) {
+            const prev = label.textContent;
+            label.textContent = "copied!";
+            btn.classList.add("is-copied");
+            setTimeout(() => {
+              label.textContent = prev ?? "copy";
+              btn.classList.remove("is-copied");
+            }, 1400);
+          }
+        } catch {
+          /* Clipboard blocked; ignore silently. */
+        }
+      });
+    }
+  }
+</script>
+
+<style>
+  .install {
+    padding-block: var(--s-9);
+    position: relative;
+  }
+
+  .tabs {
+    border: var(--hairline);
+    border-radius: var(--r-2);
+    background: var(--bg-elev);
+    overflow: hidden;
+  }
+
+  .tabs__list {
+    display: flex;
+    border-bottom: var(--hairline);
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--accent) 4%, transparent),
+      transparent
+    );
+  }
+
+  .tabs__btn {
+    flex: 0 0 auto;
+    padding: var(--s-3) var(--s-5);
+    font-family: var(--font-mono);
+    font-size: var(--t-sm);
+    color: var(--mute);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+    border-right: var(--hairline);
+    transition:
+      color 160ms var(--ease-out-quart),
+      background 160ms var(--ease-out-quart);
+  }
+
+  .tabs__btn:hover {
+    color: var(--fg);
+  }
+
+  .tabs__btn[aria-selected="true"] {
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 6%, transparent);
+    box-shadow: inset 0 -2px 0 0 var(--accent);
+  }
+
+  .tabs__panel {
+    padding: var(--s-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+  }
+
+  .tabs__panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+  }
+
+  .tabs__title {
+    font-family: var(--font-mono);
+    font-size: var(--t-sm);
+    color: var(--fg-soft);
+  }
+
+  .tabs__copy {
+    font-family: var(--font-mono);
+    font-size: var(--t-xs);
+    color: var(--mute);
+    padding: 0.4rem 0.7rem;
+    border: 1px solid var(--mute-2);
+    border-radius: var(--r-1);
+    text-transform: lowercase;
+    letter-spacing: 0.06em;
+    transition:
+      color 160ms var(--ease-out-quart),
+      border-color 160ms var(--ease-out-quart),
+      background 160ms var(--ease-out-quart);
+  }
+
+  .tabs__copy:hover {
+    color: var(--accent);
+    border-color: var(--accent-dim);
+  }
+
+  .tabs__copy.is-copied {
+    color: var(--accent-ink);
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .tabs__code {
+    margin: 0;
+    padding: var(--s-4);
+    font-family: var(--font-mono);
+    font-size: var(--t-sm);
+    line-height: 1.6;
+    color: var(--fg);
+    background: var(--bg);
+    border-radius: var(--r-1);
+    border: var(--hairline);
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  /* Subtle accent ribbon down the left edge of the active panel — feels like
+     a pinned snippet on a corkboard. */
+  .tabs__panel {
+    position: relative;
+  }
+  .tabs__panel::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--accent-dim);
+  }
+</style>

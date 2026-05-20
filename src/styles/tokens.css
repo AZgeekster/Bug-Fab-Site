@@ -1,0 +1,68 @@
+/* Design tokens — specimen-drawer aesthetic.
+   See docs/plans/2026-05-19_build-bug-fab-site.md § Phase 2. */
+
+:root {
+  /* ── Color ───────────────────────────────────────────────────────── */
+  --bg: #0a0a0a; /* warm pitch-black drawer felt */
+  --bg-elev: #141312; /* slightly raised surface */
+  --bg-trans: rgb(10 10 10 / 0.72); /* sticky-header glass */
+  --fg: #e8e6e1; /* bone-label off-white */
+  --fg-soft: #b9b6ae;
+  --mute: #6f6a60; /* warm gray for labels */
+  --mute-2: #44413c; /* hairlines */
+  --accent: #d4ff00; /* acid lime — live thing / warning */
+  --accent-dim: color-mix(in srgb, var(--accent) 65%, transparent);
+  --accent-glow: color-mix(in srgb, var(--accent) 25%, transparent);
+  --accent-ink: #0a0a0a; /* text on accent */
+  --warm-amber: #ff8a3d; /* used sparingly for "live" pulse */
+
+  /* ── Type ────────────────────────────────────────────────────────── */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Fluid type scale — clamp(min, ideal-vw, max) */
+  --t-xs: clamp(0.7rem, 0.66rem + 0.18vw, 0.78rem);
+  --t-sm: clamp(0.82rem, 0.78rem + 0.2vw, 0.92rem);
+  --t-base: clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem);
+  --t-md: clamp(1.1rem, 1rem + 0.5vw, 1.35rem);
+  --t-lg: clamp(1.4rem, 1.2rem + 1vw, 1.85rem);
+  --t-xl: clamp(2rem, 1.5rem + 2.5vw, 3rem);
+  --t-2xl: clamp(2.6rem, 1.8rem + 4vw, 4.4rem);
+  --t-3xl: clamp(3.4rem, 2rem + 6vw, 6.4rem);
+  --t-display: clamp(3rem, 1.6rem + 7vw, 8.2rem);
+
+  /* ── Spacing ─────────────────────────────────────────────────────── */
+  --s-0: 0;
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4.5rem;
+  --s-9: 7rem;
+  --s-10: 11rem;
+
+  /* ── Layout ──────────────────────────────────────────────────────── */
+  --container: 78rem; /* main width cap */
+  --container-narrow: 56rem;
+  --gutter: clamp(1rem, 2.5vw, 2rem);
+
+  /* ── Radii / borders ─────────────────────────────────────────────── */
+  --r-1: 4px;
+  --r-2: 10px;
+  --r-3: 18px;
+  --r-pill: 999px;
+  --hairline: 1px solid var(--mute-2);
+  --pin-line: 1px solid var(--accent-dim);
+
+  /* ── Shadows ─────────────────────────────────────────────────────── */
+  --shadow-soft: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 30px 60px -30px rgb(0 0 0 / 0.7);
+  --shadow-pin: 0 0 0 1px var(--accent-dim), 0 12px 36px -12px var(--accent-glow);
+
+  /* ── Easings ─────────────────────────────────────────────────────── */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}

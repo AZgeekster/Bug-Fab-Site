@@ -1,0 +1,98 @@
+@import "./tokens.css";
+@import "./reset.css";
+
+html {
+  color-scheme: dark;
+  background: var(--bg);
+  /* Subtle warm noise so the pitch black doesn't read as a flat color. */
+  background-image:
+    radial-gradient(at 0% 0%, rgb(212 255 0 / 0.025), transparent 55%),
+    radial-gradient(at 100% 100%, rgb(255 138 61 / 0.02), transparent 60%);
+}
+
+body {
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: var(--t-base);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  min-height: 100svh;
+}
+
+/* Display face only used where explicitly requested. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+}
+
+/* Specimen-card label — small mono caps for section anchors. */
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--mute);
+}
+
+.label::before {
+  content: "// ";
+  color: var(--accent);
+  letter-spacing: 0;
+}
+
+/* Aside — code-comment style microcopy. */
+.aside {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  color: var(--mute);
+}
+
+.aside::before {
+  content: "// ";
+  color: var(--accent-dim);
+}
+
+/* Mono code block. */
+pre,
+code,
+kbd,
+samp {
+  font-family: var(--font-mono);
+}
+
+/* Selection in the accent color — small detail, big impact. */
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Reduced-motion users: animations collapse to instant. Note: the
+   `motion-on` class on <html> is added only when reduce-motion is OFF,
+   so the initial-hidden states below never fire for these visitors. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Motion initial states — applied only when JS has flipped `motion-on`.
+   Without the class, content renders at its final state (no flicker). */
+.motion-on [data-anim="hero-line"] {
+  opacity: 0;
+  transform: translateY(1em);
+}
+.motion-on [data-anim="hero-fade-up"] {
+  opacity: 0;
+  transform: translateY(24px);
+}
+.motion-on [data-anim="reveal"] {
+  opacity: 0;
+  transform: translateY(24px);
+}

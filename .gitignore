@@ -1,0 +1,36 @@
+docs/logins.md
+docs/credentials.md
+docs/secrets.md
+docs/apis.md
+.claude/
+
+# Node / npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+
+# Astro
+dist/
+.astro/
+
+# Synced from parent BUG-FAB repo by scripts/sync-bug-fab.mjs
+public/bug-fab/
+
+# Local env
+.env
+.env.local
+.env.*.local
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+
+# Build output / caches
+*.log
+.turbo/

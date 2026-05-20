@@ -1,0 +1,41 @@
+# Keep the Docker build context lean. `public/bug-fab/` is intentionally
+# NOT ignored so the locally-synced FAB bundle ships in the image.
+
+node_modules
+dist
+.astro
+.git
+.gitignore
+.github
+
+# Editor / OS noise
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Local-only files
+.env
+.env.local
+.env.*.local
+
+# Logs / caches
+*.log
+npm-debug.log*
+.npm
+.turbo
+
+# Docs are not part of the runtime image
+docs
+
+# Local docs
+README.md
+CLAUDE.md
+
+# Dev-only configs that don't affect the build
+.prettierrc
+.prettierignore
+
+# The Dockerfile itself
+Dockerfile
+.dockerignore

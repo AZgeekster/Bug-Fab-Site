@@ -1,0 +1,30 @@
+---
+// Graceful degradation: visitors with JS disabled can't fire the FAB on the
+// page, but the rest of the site (typography, imagery, links) reads fine.
+// This tiny banner replaces the "live on this page" pointer in the hero.
+---
+
+<noscript>
+  <div class="noscript">
+    <p>
+      <strong>JavaScript is off.</strong> The FAB widget needs it. The
+      <a href="https://bug-fab.fly.dev/" rel="noopener">live demo</a> works with JS on; everything else
+      on this page reads fine without it.
+    </p>
+  </div>
+</noscript>
+
+<style is:global>
+  .noscript {
+    background: var(--warm-amber);
+    color: var(--bg);
+    padding: var(--s-3) var(--s-5);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: var(--t-sm);
+  }
+  .noscript a {
+    color: var(--bg);
+    text-decoration: underline;
+  }
+</style>

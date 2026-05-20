@@ -1,0 +1,62 @@
+---
+import { Font } from "astro:assets";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const {
+  title = "Bug-Fab — a drop-in floating bug reporter for any web frontend",
+  description = "A drop-in floating action button that lets your users file a bug report without leaving the page. Screenshot, on-image annotations, console errors, and recent network calls all ride along automatically.",
+  ogImage = "/og.png",
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="color-scheme" content="dark" />
+
+    <!-- Pre-paint motion gate: set `motion-on` only when reduce is off so
+         reduced-motion users never see the initial-hidden CSS states. -->
+    <script is:inline>
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.classList.add("motion-on");
+      }
+    </script>
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="/favicon.ico" />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site).toString()} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Preload fonts via Astro Fonts API -->
+    <Font cssVariable="--font-display" preload />
+    <Font cssVariable="--font-mono" preload />
+  </head>
+  <body>
+    <slot />
+    <script>
+      import("../scripts/motion.client.ts");
+    </script>
+  </body>
+</html>

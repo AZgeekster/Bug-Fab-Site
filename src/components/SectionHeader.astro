@@ -1,0 +1,35 @@
+---
+interface Props {
+  label: string;
+  heading: string;
+  /** Optional sub-line in mono. */
+  aside?: string;
+}
+
+const { label, heading, aside } = Astro.props;
+---
+
+<header class="sh">
+  <p class="sh__label label">{label}</p>
+  <h2 class="sh__heading display">{heading}</h2>
+  {aside && <p class="sh__aside aside">{aside}</p>}
+</header>
+
+<style>
+  .sh {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    margin-block-end: var(--s-7);
+    max-width: 56rem;
+  }
+  .sh__heading {
+    font-size: var(--t-2xl);
+    color: var(--fg);
+  }
+  .sh__aside {
+    font-size: var(--t-base);
+    color: var(--mute);
+    max-width: 42rem;
+  }
+</style>

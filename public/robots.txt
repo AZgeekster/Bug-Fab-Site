@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bug-fab-site.fly.dev/sitemap.xml

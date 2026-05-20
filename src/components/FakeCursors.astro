@@ -1,0 +1,159 @@
+---
+// Drifting fake-user cursors in the hero. Vanilla TS, ~2 KB, RAF-driven.
+// Cursors trace lazy Bezier paths and occasionally flash a "filing report"
+// bubble. Hidden entirely under prefers-reduced-motion.
+
+const cursors = [
+  { name: "ava", color: "#d4ff00" },
+  { name: "marcus", color: "#ff8a3d" },
+  { name: "lin", color: "#9aa0ff" },
+  { name: "kai", color: "#ff6b9d" },
+];
+---
+
+<div class="cursors" aria-hidden="true" data-cursors>
+  {
+    cursors.map((c, i) => (
+      <div class="cursor" style={`--c:${c.color}`} data-cursor={i}>
+        <svg class="cursor__arrow" viewBox="0 0 14 18" width="14" height="18">
+          <path
+            d="M1 1 L1 13 L4.5 10 L7 16 L9.5 15 L7 9 L12 8.5 Z"
+            fill="var(--c)"
+            stroke="rgba(0,0,0,0.4)"
+            stroke-width="0.5"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span class="cursor__label">{c.name}</span>
+        <span class="cursor__bubble" data-cursor-bubble>
+          filed a bug
+        </span>
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-cursors]");
+  if (root && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const els = Array.from(root.querySelectorAll<HTMLElement>(".cursor"));
+    const bubbles = Array.from(root.querySelectorAll<HTMLElement>("[data-cursor-bubble]"));
+
+    // Each cursor gets its own randomized loop: four anchor points it eases
+    // between continuously. Position is in viewport percentages so it works
+    // at any breakpoint.
+    type Anchor = { x: number; y: number };
+    type State = { anchors: Anchor[]; phase: number; speed: number };
+    const states: State[] = els.map(() => ({
+      anchors: Array.from({ length: 4 }, () => ({
+        x: 10 + Math.random() * 80,
+        y: 10 + Math.random() * 70,
+      })),
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.00015 + Math.random() * 0.00012,
+    }));
+
+    function loop(now: DOMHighResTimeStamp) {
+      for (let i = 0; i < els.length; i++) {
+        const s = states[i];
+        const t = (now * s.speed + s.phase) % 1;
+        // Smooth interpolation through the four anchors using a Catmull-like
+        // blend so the path stays organic.
+        const idx = Math.floor(t * 4);
+        const frac = (t * 4) % 1;
+        const a = s.anchors[idx];
+        const b = s.anchors[(idx + 1) % 4];
+        const ease = frac * frac * (3 - 2 * frac);
+        const x = a.x + (b.x - a.x) * ease;
+        const y = a.y + (b.y - a.y) * ease;
+        els[i].style.transform = `translate(${x}vw, ${y}vh)`;
+      }
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+
+    // Every 6–10s, pick a random cursor and flash its "filed a bug" bubble.
+    function flashBubble() {
+      const i = Math.floor(Math.random() * bubbles.length);
+      const b = bubbles[i];
+      b.classList.add("is-on");
+      setTimeout(() => b.classList.remove("is-on"), 2200);
+      setTimeout(flashBubble, 6000 + Math.random() * 4000);
+    }
+    setTimeout(flashBubble, 3500);
+  }
+</script>
+
+<style>
+  .cursors {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .cursor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 6px;
+    transform: translate(50vw, 50vh);
+    transition: transform 80ms linear;
+    will-change: transform;
+    opacity: 0.55;
+  }
+
+  .cursor__arrow {
+    display: block;
+    filter: drop-shadow(0 2px 6px rgb(0 0 0 / 0.5));
+  }
+
+  .cursor__label {
+    margin-top: 14px;
+    padding: 2px 6px;
+    background: var(--c);
+    color: var(--bg);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: lowercase;
+    border-radius: 3px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .cursor__bubble {
+    position: absolute;
+    top: 38px;
+    left: 14px;
+    padding: 4px 8px;
+    background: var(--bg-elev);
+    color: var(--fg);
+    border: 1px solid var(--c);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition:
+      opacity 280ms var(--ease-out-quart),
+      transform 280ms var(--ease-out-quart);
+  }
+
+  .cursor__bubble.is-on {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Don't render cursors on small screens — too cluttered. */
+  @media (max-width: 720px) {
+    .cursors {
+      display: none;
+    }
+  }
+</style>

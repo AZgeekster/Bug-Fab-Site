@@ -1,0 +1,195 @@
+---
+import Container from "./Container.astro";
+import SectionHeader from "./SectionHeader.astro";
+
+const features = [
+  {
+    no: "01",
+    title: "A versioned HTTP intake spec",
+    body: "The wire protocol is the design center — not the Python package. Any backend that speaks multipart can implement it.",
+    link: "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/PROTOCOL.md",
+    span: "wide",
+  },
+  {
+    no: "02",
+    title: "A vanilla-JS frontend bundle",
+    body: "FAB + overlay + annotation canvas + console buffer + network log + vendored html2canvas. One <script> tag.",
+    link: "https://github.com/AZgeekster/Bug-Fab/tree/main/static",
+  },
+  {
+    no: "03",
+    title: "A FastAPI reference adapter",
+    body: "Three pluggable storage backends: file, SQLite, Postgres. Optional GitHub Issues sync.",
+    link: "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/INSTALLATION.md",
+  },
+  {
+    no: "04",
+    title: "Conformance pytest plugin",
+    body: "Adapter authors verify their implementation against the protocol with one fixture.",
+    link: "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/CONFORMANCE.md",
+  },
+  {
+    no: "05",
+    title: "A live, clickable demo",
+    body: "bug-fab.fly.dev runs the FastAPI adapter with eight intentional-error buttons. Reports show up at /admin/bug-reports/.",
+    link: "https://bug-fab.fly.dev/",
+    span: "wide",
+  },
+];
+---
+
+<section class="features" id="features" data-anim="reveal">
+  <Container>
+    <SectionHeader
+      label="What ships in v0.1"
+      heading="Five things, none of them buzzwords."
+      aside="One protocol, one bundle, one reference backend, one test plugin, one demo. That's the whole box."
+    />
+
+    <ul class="grid">
+      {
+        features.map((f) => (
+          <li class={`tile ${f.span === "wide" ? "tile--wide" : ""}`}>
+            <div class="tile__pin" aria-hidden="true" />
+            <p class="tile__no">{f.no}</p>
+            <h3 class="tile__title">{f.title}</h3>
+            <p class="tile__body">{f.body}</p>
+            <a class="tile__link" href={f.link} rel="noopener">
+              read more
+              <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true">
+                <path
+                  d="M5 3h8v8M13 3L4 12"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Container>
+</section>
+
+<style>
+  .features {
+    padding-block: var(--s-9);
+  }
+
+  .grid {
+    display: grid;
+    gap: var(--s-4);
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .tile {
+    grid-column: span 2;
+    position: relative;
+    padding: var(--s-5);
+    background: var(--bg-elev);
+    border: var(--hairline);
+    border-radius: var(--r-2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    overflow: hidden;
+    transition:
+      border-color 200ms var(--ease-out-quart),
+      transform 240ms var(--ease-out-quart);
+  }
+
+  .tile--wide {
+    grid-column: span 3;
+  }
+
+  /* Specimen pin — slides into view on hover. */
+  .tile__pin {
+    position: absolute;
+    top: var(--s-4);
+    right: var(--s-4);
+    width: 28px;
+    height: 1px;
+    background: var(--accent);
+    transform-origin: right center;
+    transform: scaleX(0);
+    transition: transform 320ms var(--ease-spring);
+  }
+  .tile__pin::after {
+    content: "";
+    position: absolute;
+    right: -3px;
+    top: -3px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+
+  .tile:hover {
+    border-color: var(--accent-dim);
+    transform: translateY(-2px);
+  }
+  .tile:hover .tile__pin {
+    transform: scaleX(1);
+  }
+
+  .tile__no {
+    font-family: var(--font-mono);
+    font-size: var(--t-xs);
+    color: var(--mute);
+    letter-spacing: 0.18em;
+  }
+
+  .tile__title {
+    font-family: var(--font-mono);
+    font-size: var(--t-md);
+    font-weight: 700;
+    color: var(--fg);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+
+  .tile__body {
+    font-family: var(--font-mono);
+    font-size: var(--t-sm);
+    color: var(--fg-soft);
+    line-height: 1.55;
+    flex: 1;
+  }
+
+  .tile__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    font-family: var(--font-mono);
+    font-size: var(--t-sm);
+    color: var(--accent);
+    margin-block-start: var(--s-2);
+    align-self: flex-start;
+  }
+  .tile__link:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-color: var(--accent-dim);
+  }
+
+  @media (max-width: 920px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .tile,
+    .tile--wide {
+      grid-column: span 1;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

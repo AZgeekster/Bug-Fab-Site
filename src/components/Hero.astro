@@ -1,0 +1,245 @@
+---
+import Container from "./Container.astro";
+import HeroAurora from "./HeroAurora.astro";
+import TopBar from "./TopBar.astro";
+import FakeCursors from "./FakeCursors.astro";
+---
+
+<section class="hero" id="top">
+  <HeroAurora />
+  <FakeCursors />
+  <TopBar />
+
+  <Container class="hero__inner">
+    <p class="hero__label" data-anim="hero-fade-up">
+      <span class="hero__label-no">Spec. №&nbsp;0.1.0a1</span>
+      <span class="hero__label-sep" aria-hidden="true">·</span>
+      <span class="hero__label-name">Lepidoptera&nbsp;reportus</span>
+    </p>
+
+    <h1 class="hero__h1 display">
+      <span class="hero__line" data-anim="hero-line">A drop-in floating</span>
+      <span class="hero__line" data-anim="hero-line">action button that lets</span>
+      <span class="hero__line" data-anim="hero-line"
+        >your users <em class="hero__h1-em">file&nbsp;a&nbsp;bug</em>.</span
+      >
+    </h1>
+
+    <p class="hero__sub aside" data-anim="hero-fade-up">
+      it's just a hobby project, be nice. paste a script tag, see what falls out.
+    </p>
+
+    <div class="hero__cta" data-anim="hero-fade-up">
+      <a class="btn btn--primary" href="#install">
+        <span>Try the FAB</span>
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+          <path
+            d="M3 8h10M9 4l4 4-4 4"
+            stroke="currentColor"
+            stroke-width="1.8"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+      </a>
+      <a class="btn btn--ghost" href="https://github.com/AZgeekster/Bug-Fab" rel="noopener">
+        <span>View on GitHub</span>
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+          <path
+            d="M5 3h8v8M13 3L4 12"
+            stroke="currentColor"
+            stroke-width="1.8"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+      </a>
+    </div>
+
+    <p class="hero__live aside" data-anim="hero-fade-up">
+      live specimen pinned bottom-right of this page →
+      <span class="hero__live-pulse" aria-hidden="true"></span>
+      click the bug.
+    </p>
+  </Container>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    overflow: hidden;
+    isolation: isolate;
+    padding-block-start: var(--s-9);
+    padding-block-end: var(--s-8);
+    display: flex;
+    align-items: center;
+  }
+
+  .hero :global(.hero__inner) {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+    max-width: 56rem;
+  }
+
+  /* Specimen-label header above the H1. */
+  .hero__label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-3);
+    font-family: var(--font-mono);
+    font-size: var(--t-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--mute);
+    margin-block-end: var(--s-2);
+  }
+  .hero__label-no {
+    color: var(--accent);
+  }
+  .hero__label-sep {
+    color: var(--mute-2);
+  }
+  .hero__label-name {
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0.04em;
+    color: var(--fg-soft);
+  }
+
+  .hero__h1 {
+    font-size: var(--t-display);
+    color: var(--fg);
+  }
+
+  .hero__line {
+    display: block;
+  }
+
+  .hero__h1-em {
+    font-style: normal;
+    color: var(--accent);
+    /* Hand-drawn underline echoing a specimen-label scrawl. */
+    background-image: linear-gradient(
+      transparent 78%,
+      var(--accent-dim) 78%,
+      var(--accent-dim) 92%,
+      transparent 92%
+    );
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    padding-inline: 0.1em;
+  }
+
+  .hero__sub {
+    max-width: 36rem;
+    font-size: var(--t-md);
+    color: var(--fg-soft);
+  }
+  .hero__sub::before {
+    color: var(--accent);
+  }
+
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    margin-block-start: var(--s-3);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: 0.85rem 1.25rem;
+    font-family: var(--font-mono);
+    font-size: var(--t-sm);
+    font-weight: 500;
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+    border-radius: var(--r-1);
+    transition:
+      transform 160ms var(--ease-spring),
+      background 160ms var(--ease-out-quart),
+      color 160ms var(--ease-out-quart),
+      box-shadow 200ms var(--ease-out-quart);
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn--primary {
+    background: var(--accent);
+    color: var(--accent-ink);
+    box-shadow: 0 6px 30px -8px var(--accent-glow);
+  }
+  .btn--primary:hover {
+    box-shadow: 0 10px 36px -8px var(--accent);
+  }
+
+  .btn--ghost {
+    background: transparent;
+    color: var(--fg);
+    border: 1px solid var(--mute-2);
+  }
+  .btn--ghost:hover {
+    border-color: var(--accent-dim);
+    color: var(--accent);
+  }
+
+  /* "live on this page" caption — diagonal scrawl that points toward the
+     actual FAB sitting in the bottom-right corner of the viewport. */
+  .hero__live {
+    margin-block-start: var(--s-5);
+    font-size: var(--t-sm);
+    color: var(--mute);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    align-self: flex-end;
+  }
+  .hero__live::before {
+    color: var(--warm-amber);
+  }
+
+  .hero__live-pulse {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--warm-amber);
+    box-shadow: 0 0 0 0 var(--warm-amber);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__live-pulse {
+      animation: pulse 1.8s ease-out infinite;
+    }
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--warm-amber) 65%, transparent);
+    }
+    70% {
+      box-shadow: 0 0 0 14px color-mix(in srgb, var(--warm-amber) 0%, transparent);
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+
+  /* Tablet down: tighten the H1, drop the corner caption alignment. */
+  @media (max-width: 760px) {
+    .hero__live {
+      align-self: flex-start;
+    }
+    .hero__h1 {
+      letter-spacing: -0.025em;
+    }
+  }
+</style>

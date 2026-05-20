@@ -1,0 +1,182 @@
+---
+import Container from "./Container.astro";
+import SectionHeader from "./SectionHeader.astro";
+
+type Status = "reference" | "example" | "sketch" | "wanted";
+
+interface Row {
+  name: string;
+  language: string;
+  status: Status;
+  note: string;
+}
+
+const rows: Row[] = [
+  {
+    name: "FastAPI",
+    language: "Python",
+    status: "reference",
+    note: "shipped — bug_fab.submit_router",
+  },
+  {
+    name: "Flask",
+    language: "Python",
+    status: "example",
+    note: "shipped — examples/flask-minimal/",
+  },
+  { name: "ASP.NET Core", language: "C#", status: "sketch", note: "community-contributed adapter" },
+  { name: "Express", language: "Node", status: "wanted", note: "PR welcome" },
+  { name: "Fastify", language: "Node", status: "wanted", note: "PR welcome" },
+  { name: "SvelteKit", language: "Node", status: "wanted", note: "PR welcome" },
+  { name: "Django", language: "Python", status: "wanted", note: "PR welcome" },
+  { name: "Rails", language: "Ruby", status: "wanted", note: "PR welcome" },
+];
+
+const statusMeta: Record<Status, { dot: string; label: string }> = {
+  reference: { dot: "var(--accent)", label: "reference" },
+  example: { dot: "var(--accent-dim)", label: "example" },
+  sketch: { dot: "var(--warm-amber)", label: "sketch" },
+  wanted: { dot: "var(--mute)", label: "wanted" },
+};
+---
+
+<section class="adapters" id="adapters" data-anim="reveal">
+  <Container>
+    <SectionHeader
+      label="Adapters"
+      heading="Framework-agnostic by design."
+      aside="The wire protocol is the contract. The Python adapter is one implementation. Anyone can write another."
+    />
+
+    <div class="table-wrap">
+      <table class="adapters__table">
+        <thead>
+          <tr>
+            <th scope="col">Framework</th>
+            <th scope="col">Language</th>
+            <th scope="col">Status</th>
+            <th scope="col">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map((r) => (
+              <tr>
+                <td class="adapters__name">{r.name}</td>
+                <td class="adapters__lang">{r.language}</td>
+                <td>
+                  <span class="status">
+                    <span
+                      class="status__dot"
+                      style={`background:${statusMeta[r.status].dot}`}
+                      aria-hidden="true"
+                    />
+                    <span class="status__label">{statusMeta[r.status].label}</span>
+                  </span>
+                </td>
+                <td class="adapters__note">{r.note}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <p class="adapters__cta aside">
+      writing one?
+      <a href="https://github.com/AZgeekster/Bug-Fab/blob/main/docs/ADAPTERS.md" rel="noopener">
+        the adapter guide is here →
+      </a>
+    </p>
+  </Container>
+</section>
+
+<style>
+  .adapters {
+    padding-block: var(--s-9);
+  }
+
+  .table-wrap {
+    border: var(--hairline);
+    border-radius: var(--r-2);
+    background: var(--bg-elev);
+    overflow-x: auto;
+  }
+
+  .adapters__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: var(--t-sm);
+  }
+
+  .adapters__table th,
+  .adapters__table td {
+    text-align: left;
+    padding: var(--s-3) var(--s-4);
+    vertical-align: middle;
+  }
+
+  .adapters__table thead th {
+    color: var(--mute);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: var(--t-xs);
+    font-weight: 500;
+    border-bottom: var(--hairline);
+    background: color-mix(in srgb, var(--accent) 3%, transparent);
+  }
+
+  .adapters__table tbody tr {
+    border-bottom: var(--hairline);
+    transition: background 160ms var(--ease-out-quart);
+  }
+  .adapters__table tbody tr:last-child {
+    border-bottom: 0;
+  }
+  .adapters__table tbody tr:hover {
+    background: color-mix(in srgb, var(--accent) 4%, transparent);
+  }
+
+  .adapters__name {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .adapters__lang,
+  .adapters__note {
+    color: var(--mute);
+  }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  .status__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    box-shadow: 0 0 8px currentColor;
+  }
+
+  .status__label {
+    color: var(--fg-soft);
+    text-transform: lowercase;
+    letter-spacing: 0.06em;
+  }
+
+  .adapters__cta {
+    margin-block-start: var(--s-5);
+    text-align: right;
+  }
+  .adapters__cta a {
+    color: var(--accent);
+  }
+  .adapters__cta a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-color: var(--accent-dim);
+  }
+</style>

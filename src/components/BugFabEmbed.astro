@@ -1,0 +1,33 @@
+---
+// Loads the synced Bug-Fab bundle and wires it to the live public demo at
+// bug-fab.fly.dev. Every report submitted here goes to the public viewer at
+// https://bug-fab.fly.dev/admin/bug-reports/ — that's a feature.
+//
+// The flag `window.BugFabAutoInit = false` MUST be set before the bundle
+// loads, otherwise the bundle auto-initializes with no submit URL.
+---
+
+<script is:inline>
+  // Block the bundle's auto-init so we can supply our own config.
+  window.BugFabAutoInit = false;
+</script>
+
+<script is:inline src="/bug-fab/static/bug-fab.js" defer></script>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    if (!window.BugFab) {
+      console.warn("[bug-fab-embed] bundle did not load; FAB unavailable");
+      return;
+    }
+    window.BugFab.init({
+      submitUrl: "https://bug-fab.fly.dev/api/bug-reports",
+      appVersion: "site-v1",
+      categories: ["Bug", "Feedback", "Praise"],
+      annotationColor: "#d4ff00",
+      onSubmitError: (err) => {
+        console.error("[bug-fab-embed] submit failed:", err);
+      },
+    });
+  });
+</script>

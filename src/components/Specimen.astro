@@ -1,0 +1,294 @@
+---
+import Container from "./Container.astro";
+
+// A pinned specimen card — the brand totem. Cursor-tracked CSS 3D tilt with
+// independent parallax on the wing-cases. SVG-only, no framework, ~6 KB.
+---
+
+<section class="spec" data-anim="reveal" data-specimen-root>
+  <Container width="narrow">
+    <div class="spec__card" data-spec-card>
+      <!-- Pin holding the specimen to the card -->
+      <span class="spec__pin" aria-hidden="true">
+        <span class="spec__pin-line"></span>
+        <span class="spec__pin-head"></span>
+      </span>
+
+      <!-- Specimen sketch -->
+      <svg class="spec__bug" viewBox="0 0 200 240" aria-hidden="true" data-spec-bug>
+        <!-- Legs (mid-pair, fore-pair, hind-pair) -->
+        <g
+          class="spec__legs"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          fill="none"
+        >
+          <!-- Fore -->
+          <path d="M70 90 L40 70 L30 60"></path>
+          <path d="M130 90 L160 70 L170 60"></path>
+          <!-- Mid -->
+          <path d="M65 130 L25 130 L15 145"></path>
+          <path d="M135 130 L175 130 L185 145"></path>
+          <!-- Hind -->
+          <path d="M70 170 L35 195 L25 215"></path>
+          <path d="M130 170 L165 195 L175 215"></path>
+        </g>
+
+        <!-- Head -->
+        <ellipse cx="100" cy="60" rx="22" ry="18" fill="currentColor"></ellipse>
+
+        <!-- Antennae -->
+        <g stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none">
+          <path d="M88 48 Q78 32 70 28"></path>
+          <path d="M112 48 Q122 32 130 28"></path>
+          <circle cx="70" cy="28" r="2.6" fill="currentColor"></circle>
+          <circle cx="130" cy="28" r="2.6" fill="currentColor"></circle>
+        </g>
+
+        <!-- Eyes -->
+        <circle cx="92" cy="58" r="2.8" class="spec__eye"></circle>
+        <circle cx="108" cy="58" r="2.8" class="spec__eye"></circle>
+
+        <!-- Pronotum (the segment behind the head) -->
+        <path d="M75 78 Q100 70 125 78 L130 100 L70 100 Z" fill="currentColor"></path>
+
+        <!-- Elytra (wing-cases) — split down the middle, each animated
+             independently to simulate subtle 3D rotation. -->
+        <g data-spec-elytra-left>
+          <path
+            d="M100 100 Q72 110 65 150 Q60 195 95 215 L100 215 Z"
+            fill="currentColor"
+            class="spec__elytron"></path>
+          <!-- Lime accent stripe -->
+          <path
+            d="M85 118 Q73 145 78 195"
+            stroke="var(--accent)"
+            stroke-width="2"
+            stroke-linecap="round"
+            fill="none"
+            opacity="0.85"></path>
+        </g>
+        <g data-spec-elytra-right>
+          <path
+            d="M100 100 Q128 110 135 150 Q140 195 105 215 L100 215 Z"
+            fill="currentColor"
+            class="spec__elytron"></path>
+          <path
+            d="M115 118 Q127 145 122 195"
+            stroke="var(--accent)"
+            stroke-width="2"
+            stroke-linecap="round"
+            fill="none"
+            opacity="0.85"></path>
+        </g>
+
+        <!-- Center seam highlight -->
+        <line x1="100" y1="100" x2="100" y2="215" stroke="rgba(0,0,0,0.4)" stroke-width="0.8"
+        ></line>
+      </svg>
+
+      <!-- Specimen label -->
+      <dl class="spec__label">
+        <div class="spec__row">
+          <dt>order</dt>
+          <dd>Coleoptera</dd>
+        </div>
+        <div class="spec__row">
+          <dt>species</dt>
+          <dd><em>Bug-fab reportus</em></dd>
+        </div>
+        <div class="spec__row">
+          <dt>habitat</dt>
+          <dd>any web frontend</dd>
+        </div>
+        <div class="spec__row">
+          <dt>collected</dt>
+          <dd>0.1.0a1 · MIT</dd>
+        </div>
+      </dl>
+    </div>
+  </Container>
+</section>
+
+<script>
+  // Cursor-tracked tilt. The card rotates ~12° around X/Y based on cursor
+  // distance from card center; the elytra rotate independently for parallax.
+  const root = document.querySelector<HTMLElement>("[data-specimen-root]");
+  const card = document.querySelector<HTMLElement>("[data-spec-card]");
+  const bug = document.querySelector<HTMLElement>("[data-spec-bug]");
+  const elL = document.querySelector<SVGGElement>("[data-spec-elytra-left]");
+  const elR = document.querySelector<SVGGElement>("[data-spec-elytra-right]");
+
+  if (
+    root &&
+    card &&
+    bug &&
+    elL &&
+    elR &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    let rx = 0;
+    let ry = 0;
+    let tx = 0;
+    let ty = 0;
+
+    root.addEventListener("pointermove", (e) => {
+      const rect = card.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      // -1..1
+      tx = (e.clientX - cx) / (rect.width / 2);
+      ty = (e.clientY - cy) / (rect.height / 2);
+    });
+
+    root.addEventListener("pointerleave", () => {
+      tx = 0;
+      ty = 0;
+    });
+
+    function loop() {
+      // ease toward target
+      rx += (ty * -10 - rx) * 0.08;
+      ry += (tx * 14 - ry) * 0.08;
+      card!.style.transform = `perspective(900px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+      // Wings parallax outward — left/right elytra splay subtly when the
+      // viewer looks at the bug from the side.
+      const splay = ry * 0.4;
+      elL!.style.transform = `rotate(${-splay}deg)`;
+      elR!.style.transform = `rotate(${splay}deg)`;
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  }
+</script>
+
+<style>
+  .spec {
+    padding-block: var(--s-9);
+    perspective: 1200px;
+  }
+
+  .spec__card {
+    position: relative;
+    margin-inline: auto;
+    max-width: 32rem;
+    aspect-ratio: 3 / 4;
+    background:
+      radial-gradient(
+        120% 80% at 50% 0%,
+        color-mix(in srgb, var(--warm-amber) 6%, transparent),
+        transparent 60%
+      ),
+      var(--bg-elev);
+    border: var(--hairline);
+    border-radius: var(--r-3);
+    box-shadow: var(--shadow-soft);
+    color: var(--fg-soft);
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding: var(--s-6) var(--s-5) var(--s-5);
+    transform-style: preserve-3d;
+    transition: box-shadow 320ms var(--ease-out-quart);
+  }
+
+  .spec__card:hover {
+    box-shadow:
+      var(--shadow-soft),
+      0 0 0 1px var(--accent-dim),
+      0 24px 60px -24px var(--accent-glow);
+  }
+
+  /* Pin */
+  .spec__pin {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 2;
+  }
+  .spec__pin-line {
+    width: 1px;
+    height: 26px;
+    background: linear-gradient(180deg, var(--mute-2), transparent);
+  }
+  .spec__pin-head {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow:
+      0 0 0 2px var(--bg),
+      0 0 16px var(--accent-glow);
+    margin-top: -4px;
+  }
+
+  .spec__bug {
+    display: block;
+    width: 56%;
+    margin: var(--s-3) auto var(--s-4);
+    color: var(--fg);
+    transition: filter 240ms var(--ease-out-quart);
+  }
+
+  .spec__card:hover .spec__bug {
+    filter: drop-shadow(0 4px 18px var(--accent-glow));
+  }
+
+  .spec__eye {
+    fill: var(--accent);
+  }
+
+  [data-spec-elytra-left],
+  [data-spec-elytra-right] {
+    transform-origin: 100px 100px;
+    transition: transform 240ms var(--ease-out-quart);
+  }
+
+  /* Label */
+  .spec__label {
+    display: grid;
+    gap: var(--s-2);
+    font-family: var(--font-mono);
+    font-size: var(--t-xs);
+    padding-top: var(--s-4);
+    border-top: var(--hairline);
+  }
+
+  .spec__row {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    gap: var(--s-3);
+  }
+
+  .spec__row dt {
+    color: var(--mute);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+
+  .spec__row dd {
+    color: var(--fg);
+  }
+
+  .spec__row dd em {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  @media (max-width: 540px) {
+    .spec__card {
+      padding: var(--s-5) var(--s-4) var(--s-4);
+    }
+    .spec__bug {
+      width: 70%;
+    }
+    .spec__row {
+      grid-template-columns: 6rem 1fr;
+    }
+  }
+</style>

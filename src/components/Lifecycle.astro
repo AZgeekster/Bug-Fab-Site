@@ -1,0 +1,189 @@
+---
+import Container from "./Container.astro";
+import SectionHeader from "./SectionHeader.astro";
+
+const stages = [
+  { no: "01", label: "Captured", note: "screenshot + console + network log" },
+  { no: "02", label: "Annotated", note: "arrows, boxes, the cat's involvement" },
+  { no: "03", label: "Filed", note: "POST to your endpoint" },
+  { no: "04", label: "Triaged", note: "your viewer, your rules" },
+];
+---
+
+<section class="lc" id="lifecycle" data-anim="reveal">
+  <Container>
+    <SectionHeader
+      label="Lifecycle"
+      heading="Four stages, drawn left to right."
+      aside="A report enters from a user's screen and ends up in your backlog. Bug-Fab owns the first three. The fourth is yours."
+    />
+
+    <div class="lc__diagram" data-lifecycle aria-hidden="true">
+      <!-- Connector lines (drawn first, fade then sweep) -->
+      <svg class="lc__svg" viewBox="0 0 800 80" preserveAspectRatio="none">
+        <line x1="100" y1="40" x2="700" y2="40" class="lc__connector"></line>
+        <line
+          x1="100"
+          y1="40"
+          x2="300"
+          y2="40"
+          class="lc__connector lc__connector--seg lc__connector--seg-1"></line>
+        <line
+          x1="300"
+          y1="40"
+          x2="500"
+          y2="40"
+          class="lc__connector lc__connector--seg lc__connector--seg-2"></line>
+        <line
+          x1="500"
+          y1="40"
+          x2="700"
+          y2="40"
+          class="lc__connector lc__connector--seg lc__connector--seg-3"></line>
+      </svg>
+
+      <ol class="lc__stages">
+        {
+          stages.map((s, i) => (
+            <li class="lc__stage" style={`--i:${i}`}>
+              <span class="lc__dot" aria-hidden="true" />
+              <span class="lc__no">{s.no}</span>
+              <span class="lc__label">{s.label}</span>
+              <span class="lc__note">{s.note}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .lc {
+    padding-block: var(--s-9);
+  }
+
+  .lc__diagram {
+    position: relative;
+    margin-block-start: var(--s-5);
+  }
+
+  /* Background base line — always visible, very faint. */
+  .lc__svg {
+    width: 100%;
+    height: 80px;
+    overflow: visible;
+  }
+  .lc__connector {
+    stroke: var(--mute-2);
+    stroke-width: 1;
+    fill: none;
+  }
+
+  /* Three accent segments that draw in. Hidden by default — only animate
+     when the IntersectionObserver flips the `is-drawn` class on. */
+  .lc__connector--seg {
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    transition: stroke-dashoffset 1100ms var(--ease-out-quart);
+  }
+  .lc__diagram.is-drawn .lc__connector--seg-1 {
+    stroke-dashoffset: 0;
+    transition-delay: 100ms;
+  }
+  .lc__diagram.is-drawn .lc__connector--seg-2 {
+    stroke-dashoffset: 0;
+    transition-delay: 600ms;
+  }
+  .lc__diagram.is-drawn .lc__connector--seg-3 {
+    stroke-dashoffset: 0;
+    transition-delay: 1100ms;
+  }
+
+  .lc__stages {
+    position: relative;
+    margin-top: -54px; /* pull onto the line */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--s-3);
+  }
+
+  .lc__stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 600ms var(--ease-out-quart),
+      transform 600ms var(--ease-out-quart);
+    transition-delay: calc(var(--i) * 500ms + 200ms);
+  }
+  .lc__diagram.is-drawn .lc__stage {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .lc__dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    box-shadow:
+      0 0 0 4px var(--bg),
+      0 0 18px var(--accent-glow);
+  }
+
+  .lc__no {
+    color: var(--mute);
+    font-size: var(--t-xs);
+    letter-spacing: 0.2em;
+    margin-top: var(--s-2);
+  }
+
+  .lc__label {
+    color: var(--fg);
+    font-size: var(--t-md);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .lc__note {
+    color: var(--fg-soft);
+    font-size: var(--t-xs);
+    max-width: 14ch;
+    line-height: 1.4;
+  }
+
+  /* Reduced-motion users get the diagram revealed instantly. */
+  @media (prefers-reduced-motion: reduce) {
+    .lc__connector--seg,
+    .lc__stage {
+      transition: none;
+    }
+    .lc__connector--seg {
+      stroke-dashoffset: 0;
+    }
+    .lc__stage {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .lc__stages {
+      grid-template-columns: repeat(2, 1fr);
+      margin-top: var(--s-5);
+      row-gap: var(--s-5);
+    }
+    .lc__svg {
+      display: none;
+    }
+  }
+</style>

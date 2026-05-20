@@ -1,0 +1,98 @@
+---
+import Container from "./Container.astro";
+
+const not = [
+  "request-a-demo flow",
+  "enterprise-purple gradient",
+  "logos of Fortune 500 customers",
+  "AI chatbot in the corner",
+  "pricing tiers behind contact-sales",
+  '"trusted by 12,000 teams"',
+  "analytics popup on page load",
+  "cookie banner you have to click through",
+  "newsletter modal after 6 seconds",
+  "vendor lock-in",
+];
+---
+
+<section class="anti" id="anti" data-anim="reveal">
+  <Container width="narrow">
+    <p class="anti__lead label">// what this is NOT</p>
+    <ul class="anti__list">
+      {
+        not.map((line) => (
+          <li class="anti__item">
+            <span class="anti__cross" aria-hidden="true">
+              ×
+            </span>
+            <span>{line}</span>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="anti__sig aside">
+      it's just MIT-licensed code that posts a screenshot. fork it, swap it, ignore it.
+    </p>
+  </Container>
+</section>
+
+<style>
+  .anti {
+    padding-block: var(--s-9);
+    border-top: var(--hairline);
+    border-bottom: var(--hairline);
+    background: linear-gradient(
+      180deg,
+      transparent,
+      color-mix(in srgb, var(--accent) 3%, transparent),
+      transparent
+    );
+  }
+
+  .anti__lead {
+    margin-block-end: var(--s-5);
+  }
+
+  .anti__list {
+    display: grid;
+    gap: var(--s-3);
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .anti__item {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-3);
+    font-family: var(--font-mono);
+    font-size: var(--t-md);
+    color: var(--fg-soft);
+    line-height: 1.35;
+  }
+
+  .anti__cross {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1.3em;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .anti__sig {
+    margin-block-start: var(--s-7);
+    font-size: var(--t-md);
+    color: var(--fg);
+    text-align: center;
+  }
+  .anti__sig::before {
+    color: var(--accent);
+  }
+
+  @media (max-width: 640px) {
+    .anti__list {
+      grid-template-columns: 1fr;
+    }
+    .anti__item {
+      font-size: var(--t-base);
+    }
+  }
+</style>

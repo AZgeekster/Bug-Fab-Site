@@ -1,0 +1,32 @@
+# Fly.io config for the Bug-Fab marketing site.
+# Mirrors the parent Bug-Fab POC's fly.toml (sjc, shared/1/256, auto-stop)
+# for operational consistency. No volume — site is fully static.
+#
+# Deploy: `flyctl launch --no-deploy` once to create the app + assign domain,
+# then `flyctl deploy` thereafter. If `bug-fab-site` is taken, pick another
+# name and rebuild.
+
+app = "bug-fab-site"
+primary_region = "sjc"
+
+[build]
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "30s"
+    method = "GET"
+    timeout = "5s"
+    path = "/healthz"
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 256

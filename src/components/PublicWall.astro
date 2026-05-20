@@ -1,0 +1,139 @@
+---
+import Container from "./Container.astro";
+import SectionHeader from "./SectionHeader.astro";
+
+const viewerUrl = "https://bug-fab.fly.dev/admin/bug-reports/";
+---
+
+<section class="wall" id="wall" data-anim="reveal">
+  <Container>
+    <SectionHeader
+      label="Real reports"
+      heading="The FAB on this page — and everywhere else."
+      aside="Every report submitted by the FAB at the bottom-right of this page lands in the same public viewer the live demo uses. Below is that viewer, in an iframe, in real time."
+    />
+
+    <div class="wall__frame">
+      <div class="wall__corner wall__corner--tl" aria-hidden="true"></div>
+      <div class="wall__corner wall__corner--tr" aria-hidden="true"></div>
+      <div class="wall__corner wall__corner--bl" aria-hidden="true"></div>
+      <div class="wall__corner wall__corner--br" aria-hidden="true"></div>
+
+      <iframe
+        class="wall__iframe"
+        src={viewerUrl}
+        title="Live bug reports — public viewer"
+        loading="lazy"
+        referrerpolicy="no-referrer"
+        sandbox="allow-same-origin allow-scripts allow-popups"></iframe>
+    </div>
+
+    <p class="wall__caption aside">
+      live at <a href={viewerUrl} rel="noopener">bug-fab.fly.dev/admin/bug-reports/</a> · anyone can read
+      it · don't paste anything you wouldn't tweet
+    </p>
+  </Container>
+</section>
+
+<style>
+  .wall {
+    padding-block: var(--s-9);
+  }
+
+  .wall__frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: var(--bg-elev);
+    border: var(--hairline);
+    border-radius: var(--r-2);
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+  }
+
+  /* Corner tick-marks — registration marks on a specimen plate. */
+  .wall__corner {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    color: var(--accent);
+    pointer-events: none;
+  }
+  .wall__corner::before,
+  .wall__corner::after {
+    content: "";
+    position: absolute;
+    background: currentColor;
+  }
+  .wall__corner::before {
+    width: 12px;
+    height: 1px;
+  }
+  .wall__corner::after {
+    width: 1px;
+    height: 12px;
+  }
+  .wall__corner--tl {
+    top: 8px;
+    left: 8px;
+  }
+  .wall__corner--tr {
+    top: 8px;
+    right: 8px;
+  }
+  .wall__corner--bl {
+    bottom: 8px;
+    left: 8px;
+  }
+  .wall__corner--br {
+    bottom: 8px;
+    right: 8px;
+  }
+  .wall__corner--tl::before,
+  .wall__corner--bl::before {
+    left: 0;
+  }
+  .wall__corner--tr::before,
+  .wall__corner--br::before {
+    right: 0;
+  }
+  .wall__corner--tl::after,
+  .wall__corner--tr::after {
+    top: 0;
+  }
+  .wall__corner--bl::after,
+  .wall__corner--br::after {
+    bottom: 0;
+  }
+
+  .wall__iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: white;
+  }
+
+  .wall__caption {
+    margin-block-start: var(--s-3);
+    font-size: var(--t-xs);
+    color: var(--mute);
+    text-align: center;
+  }
+  .wall__caption::before {
+    color: var(--warm-amber);
+  }
+  .wall__caption a {
+    color: var(--accent);
+  }
+  .wall__caption a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  @media (max-width: 640px) {
+    .wall__frame {
+      aspect-ratio: 4 / 5;
+    }
+  }
+</style>
