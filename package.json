@@ -5,13 +5,14 @@
   "private": true,
   "description": "Marketing site for Bug-Fab (https://github.com/AZgeekster/Bug-Fab)",
   "scripts": {
-    "predev": "npm run sync:bugfab",
+    "predev": "npm run sync:bugfab && npm run extract:adapters",
     "dev": "astro dev",
-    "prebuild": "npm run sync:bugfab",
+    "prebuild": "npm run sync:bugfab && npm run extract:adapters",
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "sync:bugfab": "node scripts/sync-bug-fab.mjs",
+    "extract:adapters": "node scripts/extract-adapters.mjs",
     "build:cohost": "node scripts/build-cohost.mjs",
     "format": "prettier --write ."
   },

@@ -1,32 +1,21 @@
 ---
 import Container from "./Container.astro";
 import SectionHeader from "./SectionHeader.astro";
+import adapters from "../data/adapters.json";
 
 type Status = "reference" | "community" | "sketch" | "wanted";
 
-interface Row {
+// Source of truth: BUG-FAB/repo/docs/ADAPTERS_REGISTRY.md, extracted at
+// build time by scripts/extract-adapters.mjs (predev + prebuild). To
+// update this table, edit the parent registry and re-run the build —
+// do NOT hand-edit src/data/adapters.json.
+const rows = adapters as Array<{
   name: string;
   language: string;
   status: Status;
   note: string;
-}
-
-// Canonical source: BUG-FAB/repo/docs/ADAPTERS_REGISTRY.md. Sync this table
-// when the registry's status column changes.
-const rows: Row[] = [
-  { name: "FastAPI", language: "Python", status: "reference", note: "shipped — bug_fab.submit_router" },
-  { name: "Flask", language: "Python", status: "reference", note: "first-party shim — bug-fab[flask]" },
-  { name: "Django", language: "Python", status: "reference", note: "first-party reusable app — bug-fab[django]" },
-  { name: "ASP.NET Core", language: "C#", status: "reference", note: "first-party — adapters/aspnet/, 18/18 xUnit green" },
-  { name: "Fastify", language: "TypeScript", status: "community", note: "TKR-maintained, spec-conformant" },
-  { name: "Next.js", language: "TypeScript", status: "sketch", note: "App Router route-handler walkthrough" },
-  { name: "Express", language: "TypeScript", status: "sketch", note: "walkthrough in ADAPTERS.md" },
-  { name: "NestJS", language: "TypeScript", status: "sketch", note: "BugFabModule pattern, 9 pitfalls noted" },
-  { name: "SvelteKit", language: "TypeScript", status: "sketch", note: "+server.ts mapping, Drizzle example" },
-  { name: "Hono", language: "TypeScript", status: "sketch", note: "edge-runtime friendly (Bun, CF, Vercel)" },
-  { name: "Rails", language: "Ruby", status: "sketch", note: "mountable engine — draft, tests green" },
-  { name: "Go", language: "Go", status: "sketch", note: "net/http + chi walkthrough" },
-];
+  tier: number;
+}>;
 
 const statusMeta: Record<Status, { dot: string; label: string }> = {
   reference: { dot: "var(--accent)", label: "reference" },

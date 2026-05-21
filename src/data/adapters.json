@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Django",
+    "language": "Python",
+    "status": "reference",
+    "note": "first-party — bug-fab[django]",
+    "tier": 1
+  },
+  {
+    "name": "FastAPI",
+    "language": "Python",
+    "status": "reference",
+    "note": "first-party — bug-fab",
+    "tier": 1
+  },
+  {
+    "name": "Flask",
+    "language": "Python",
+    "status": "reference",
+    "note": "first-party — bug-fab[flask]",
+    "tier": 1
+  },
+  {
+    "name": "ASP.NET Core / Razor Pages",
+    "language": "C#",
+    "status": "reference",
+    "note": "first-party — repo/adapters/aspnet/",
+    "tier": 2
+  },
+  {
+    "name": "Fastify",
+    "language": "TypeScript",
+    "status": "community",
+    "note": "TKR — spec-conformant",
+    "tier": 1
+  },
+  {
+    "name": "Express",
+    "language": "TypeScript",
+    "status": "sketch",
+    "note": "walkthrough in ADAPTERS.md",
+    "tier": 1
+  },
+  {
+    "name": "NestJS",
+    "language": "TypeScript",
+    "status": "sketch",
+    "note": "walkthrough in ADAPTERS.md",
+    "tier": 1
+  },
+  {
+    "name": "Next.js Route Handlers",
+    "language": "TypeScript",
+    "status": "sketch",
+    "note": "walkthrough in ADAPTERS.md",
+    "tier": 1
+  },
+  {
+    "name": "Hono",
+    "language": "TypeScript",
+    "status": "sketch",
+    "note": "walkthrough in ADAPTERS.md",
+    "tier": 2
+  },
+  {
+    "name": "Ruby on Rails",
+    "language": "Ruby",
+    "status": "sketch",
+    "note": "walkthrough in ADAPTERS.md",
+    "tier": 2
+  },
+  {
+    "name": "SvelteKit",
+    "language": "TypeScript",
+    "status": "sketch",
+    "note": "walkthrough in ADAPTERS.md",
+    "tier": 2
+  },
+  {
+    "name": "Go",
+    "language": "Go",
+    "status": "sketch",
+    "note": "walkthrough in ADAPTERS.md",
+    "tier": 3
+  }
+]
