@@ -28,6 +28,13 @@
     "tier": 2
   },
   {
+    "name": "Elixir + Phoenix",
+    "language": "Elixir",
+    "status": "reference",
+    "note": "first-party — in-repo source",
+    "tier": 2
+  },
+  {
     "name": "Go + Gin",
     "language": "Go",
     "status": "reference",
