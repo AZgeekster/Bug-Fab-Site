@@ -8,6 +8,14 @@
     "tier": 1
   },
   {
+    "name": "Express",
+    "language": "TypeScript",
+    "status": "reference",
+    "note": "first-party — bug-fab-express",
+    "url": "https://github.com/AZgeekster/Bug-Fab/tree/main/adapters/express",
+    "tier": 1
+  },
+  {
     "name": "FastAPI",
     "language": "Python",
     "status": "reference",
@@ -21,6 +29,14 @@
     "status": "reference",
     "note": "first-party — bug-fab[flask]",
     "url": "https://github.com/AZgeekster/Bug-Fab/tree/main/bug_fab/adapters/flask",
+    "tier": 1
+  },
+  {
+    "name": "Spring Boot",
+    "language": "Kotlin",
+    "status": "reference",
+    "note": "first-party — io.bugfab:bugfab-spring:0.1.0-SNAPSHOT",
+    "url": "https://github.com/AZgeekster/Bug-Fab/tree/main/adapters/spring-boot-kotlin",
     "tier": 1
   },
   {
@@ -48,11 +64,27 @@
     "tier": 2
   },
   {
+    "name": "Hono",
+    "language": "TypeScript",
+    "status": "reference",
+    "note": "first-party — bug-fab-hono",
+    "url": "https://github.com/AZgeekster/Bug-Fab/tree/main/adapters/hono",
+    "tier": 2
+  },
+  {
     "name": "Laravel",
     "language": "PHP",
     "status": "reference",
     "note": "first-party — bugfab/laravel-adapter",
     "url": "https://github.com/AZgeekster/Bug-Fab/tree/main/adapters/laravel",
+    "tier": 2
+  },
+  {
+    "name": "Ruby on Rails",
+    "language": "Ruby",
+    "status": "reference",
+    "note": "first-party — bug_fab-rails",
+    "url": "https://github.com/AZgeekster/Bug-Fab/tree/main/adapters/rails",
     "tier": 2
   },
   {
@@ -64,19 +96,27 @@
     "tier": 2
   },
   {
+    "name": "SvelteKit",
+    "language": "TypeScript",
+    "status": "reference",
+    "note": "first-party — bug-fab-sveltekit",
+    "url": "https://github.com/AZgeekster/Bug-Fab/tree/main/adapters/sveltekit",
+    "tier": 2
+  },
+  {
+    "name": "Vapor",
+    "language": "Swift",
+    "status": "reference",
+    "note": "first-party — in-repo source",
+    "url": "https://github.com/AZgeekster/Bug-Fab/tree/main/adapters/vapor",
+    "tier": 3
+  },
+  {
     "name": "Fastify",
     "language": "TypeScript",
     "status": "community",
     "note": "TKR — spec-conformant",
     "url": "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/ADAPTERS.md#fastify-typescript-fastify--5",
-    "tier": 1
-  },
-  {
-    "name": "Express",
-    "language": "TypeScript",
-    "status": "sketch",
-    "note": "walkthrough in ADAPTERS.md",
-    "url": "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/ADAPTERS.md#express--nodejs",
     "tier": 1
   },
   {
@@ -94,30 +134,6 @@
     "note": "walkthrough in ADAPTERS.md",
     "url": "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/ADAPTERS.md#nextjs-route-handlers-typescript-nextjs--14-app-router",
     "tier": 1
-  },
-  {
-    "name": "Hono",
-    "language": "TypeScript",
-    "status": "sketch",
-    "note": "walkthrough in ADAPTERS.md",
-    "url": "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/ADAPTERS.md#hono-typescript-hono--4",
-    "tier": 2
-  },
-  {
-    "name": "Ruby on Rails",
-    "language": "Ruby",
-    "status": "sketch",
-    "note": "walkthrough in ADAPTERS.md",
-    "url": "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/ADAPTERS.md",
-    "tier": 2
-  },
-  {
-    "name": "SvelteKit",
-    "language": "TypeScript",
-    "status": "sketch",
-    "note": "walkthrough in ADAPTERS.md",
-    "url": "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/ADAPTERS.md#sveltekit",
-    "tier": 2
   },
   {
     "name": "Go",
