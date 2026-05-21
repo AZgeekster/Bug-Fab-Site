@@ -28,6 +28,27 @@
     "tier": 2
   },
   {
+    "name": "Go + Gin",
+    "language": "Go",
+    "status": "reference",
+    "note": "first-party — go get github.com/AZgeekster/Bug-Fab/adapters/go-gin/bugfab",
+    "tier": 2
+  },
+  {
+    "name": "Laravel",
+    "language": "PHP",
+    "status": "reference",
+    "note": "first-party — bugfab/laravel-adapter",
+    "tier": 2
+  },
+  {
+    "name": "Rust + Axum",
+    "language": "Rust",
+    "status": "reference",
+    "note": "first-party — in-repo source",
+    "tier": 2
+  },
+  {
     "name": "Fastify",
     "language": "TypeScript",
     "status": "community",
