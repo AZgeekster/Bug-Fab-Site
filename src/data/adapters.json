@@ -4,6 +4,7 @@
     "language": "Python",
     "status": "reference",
     "note": "first-party — bug-fab[django]",
+    "url": "https://github.com/AZgeekster/Bug-Fab/tree/main/bug_fab/adapters/django",
     "tier": 1
   },
   {
@@ -11,6 +12,7 @@
     "language": "Python",
     "status": "reference",
     "note": "first-party — bug-fab",
+    "url": "https://github.com/AZgeekster/Bug-Fab/tree/main/bug_fab",
     "tier": 1
   },
   {
@@ -18,6 +20,7 @@
     "language": "Python",
     "status": "reference",
     "note": "first-party — bug-fab[flask]",
+    "url": "https://github.com/AZgeekster/Bug-Fab/tree/main/bug_fab/adapters/flask",
     "tier": 1
   },
   {
@@ -25,6 +28,7 @@
     "language": "C#",
     "status": "reference",
     "note": "first-party — repo/adapters/aspnet/",
+    "url": "https://github.com/AZgeekster/Bug-Fab/tree/main/adapters/aspnet",
     "tier": 2
   },
   {
@@ -32,6 +36,7 @@
     "language": "Elixir",
     "status": "reference",
     "note": "first-party — in-repo source",
+    "url": "https://github.com/AZgeekster/Bug-Fab/tree/main/adapters/phoenix",
     "tier": 2
   },
   {
@@ -39,6 +44,7 @@
     "language": "Go",
     "status": "reference",
     "note": "first-party — go get github.com/AZgeekster/Bug-Fab/adapters/go-gin/bugfab",
+    "url": "https://github.com/AZgeekster/Bug-Fab/tree/main/adapters/go-gin",
     "tier": 2
   },
   {
@@ -46,6 +52,7 @@
     "language": "PHP",
     "status": "reference",
     "note": "first-party — bugfab/laravel-adapter",
+    "url": "https://github.com/AZgeekster/Bug-Fab/tree/main/adapters/laravel",
     "tier": 2
   },
   {
@@ -53,6 +60,7 @@
     "language": "Rust",
     "status": "reference",
     "note": "first-party — in-repo source",
+    "url": "https://github.com/AZgeekster/Bug-Fab/tree/main/adapters/rust-axum",
     "tier": 2
   },
   {
@@ -60,6 +68,7 @@
     "language": "TypeScript",
     "status": "community",
     "note": "TKR — spec-conformant",
+    "url": "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/ADAPTERS.md#fastify-typescript-fastify--5",
     "tier": 1
   },
   {
@@ -67,6 +76,7 @@
     "language": "TypeScript",
     "status": "sketch",
     "note": "walkthrough in ADAPTERS.md",
+    "url": "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/ADAPTERS.md#express--nodejs",
     "tier": 1
   },
   {
@@ -74,6 +84,7 @@
     "language": "TypeScript",
     "status": "sketch",
     "note": "walkthrough in ADAPTERS.md",
+    "url": "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/ADAPTERS.md#nestjs-typescript-nestjs--10",
     "tier": 1
   },
   {
@@ -81,6 +92,7 @@
     "language": "TypeScript",
     "status": "sketch",
     "note": "walkthrough in ADAPTERS.md",
+    "url": "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/ADAPTERS.md#nextjs-route-handlers-typescript-nextjs--14-app-router",
     "tier": 1
   },
   {
@@ -88,6 +100,7 @@
     "language": "TypeScript",
     "status": "sketch",
     "note": "walkthrough in ADAPTERS.md",
+    "url": "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/ADAPTERS.md#hono-typescript-hono--4",
     "tier": 2
   },
   {
@@ -95,6 +108,7 @@
     "language": "Ruby",
     "status": "sketch",
     "note": "walkthrough in ADAPTERS.md",
+    "url": "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/ADAPTERS.md",
     "tier": 2
   },
   {
@@ -102,6 +116,7 @@
     "language": "TypeScript",
     "status": "sketch",
     "note": "walkthrough in ADAPTERS.md",
+    "url": "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/ADAPTERS.md#sveltekit",
     "tier": 2
   },
   {
@@ -109,6 +124,7 @@
     "language": "Go",
     "status": "sketch",
     "note": "walkthrough in ADAPTERS.md",
+    "url": "https://github.com/AZgeekster/Bug-Fab/blob/main/docs/ADAPTERS.md#go-nethttp--chi",
     "tier": 3
   }
 ]

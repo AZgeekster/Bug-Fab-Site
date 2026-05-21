@@ -122,8 +122,74 @@ function normalize(e) {
   const language = pickLanguage(e);
   const name = e.name.replace(/\s*\([^)]+\)\s*$/, "").trim();
   const note = deriveNote(status, e);
+  const url = deriveUrl(name, e);
 
-  return { name, language, status, note, tier: e.tier };
+  return { name, language, status, note, url, tier: e.tier };
+}
+
+const REPO_BASE = "https://github.com/AZgeekster/Bug-Fab";
+
+function deriveUrl(name, e) {
+  // Priority 1: extract an in-repo path from the Repository field. The
+  // path validator below rejects private workspaces, external URLs, and
+  // adapter notes/sketches that don't live on github.com/AZgeekster/Bug-Fab,
+  // so the upfront "is this private?" check isn't needed and used to false-
+  // match on em-dashes that are just punctuation inside the field.
+  const repoPath = extractRepoPath(e.repository || "");
+  if (repoPath) return `${REPO_BASE}/tree/main/${repoPath}`;
+
+  // Priority 2: first inline markdown link in the Reference doc field
+  // (sketches, community adapters with external homes). Paths in the
+  // registry are written relative to the registry's own location at
+  // `docs/ADAPTERS_REGISTRY.md`, so `./X.md` means `docs/X.md` on github.
+  const refDoc = e["reference doc"] || "";
+  const mdLink = refDoc.match(/\(([^)]+)\)/);
+  if (mdLink) {
+    let target = mdLink[1].trim();
+    if (target.startsWith("http")) return target;
+    if (target.startsWith("./")) {
+      // Resolve relative to docs/ (where the registry lives).
+      target = "docs/" + target.slice(2);
+    }
+    return `${REPO_BASE}/blob/main/${target}`;
+  }
+
+  // Priority 3: fall back to the registry's own anchor — guaranteed to
+  // resolve even for entries with no Repository and no Reference doc.
+  return `${REPO_BASE}/blob/main/docs/ADAPTERS_REGISTRY.md#${slugifyHeading(name)}`;
+}
+
+// Extract the first backtick-quoted in-repo path from a Repository field.
+// Strips the parent's outer-dir "repo/" prefix (the GitHub repo IS the
+// contents of that outer-dir, so the leading "repo/" is not on github).
+// Returns null when the captured path doesn't point at a public part of
+// the repo (private notes/, external URLs, etc.).
+function extractRepoPath(repo) {
+  // Scan ALL backtick-quoted segments — some Repository fields list
+  // multiple (e.g., "bug_fab/adapters/flask/ + examples/flask-minimal/"),
+  // others lead with a private path before naming a public companion.
+  const matches = [...repo.matchAll(/`([^`]+)`/g)];
+  for (const m of matches) {
+    let path = m[1].trim();
+    path = path.replace(/^\.?\/+/, "").replace(/^repo\//, "").replace(/\/$/, "");
+    if (path.startsWith("http")) continue;
+    if (/^(bug_fab|adapters|examples|docs|static|tests)\b/.test(path)) {
+      return path;
+    }
+  }
+  return null;
+}
+
+function slugifyHeading(name) {
+  // Mirror GitHub's heading-anchor slug rules well enough for adapter
+  // headings ("### Foo (Bar)" → "foo-bar"). Not bit-perfect; good enough
+  // as a last-resort fallback.
+  return name
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
 function pickLanguage(e) {

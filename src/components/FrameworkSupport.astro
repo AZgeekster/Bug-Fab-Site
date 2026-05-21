@@ -14,6 +14,7 @@ const rows = adapters as Array<{
   language: string;
   status: Status;
   note: string;
+  url: string;
   tier: number;
 }>;
 
@@ -47,7 +48,27 @@ const statusMeta: Record<Status, { dot: string; label: string }> = {
           {
             rows.map((r) => (
               <tr>
-                <td class="adapters__name">{r.name}</td>
+                <td class="adapters__name">
+                  <a href={r.url} class="adapters__link" rel="noopener" target="_blank">
+                    {r.name}
+                    <svg
+                      class="adapters__link-icon"
+                      viewBox="0 0 16 16"
+                      width="11"
+                      height="11"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M5 3h8v8M13 3L4 12"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </a>
+                </td>
                 <td class="adapters__lang">{r.language}</td>
                 <td>
                   <span class="status">
@@ -126,6 +147,36 @@ const statusMeta: Record<Status, { dot: string; label: string }> = {
   .adapters__name {
     color: var(--fg);
     font-weight: 500;
+  }
+
+  .adapters__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    color: inherit;
+    border-bottom: 1px dashed transparent;
+    transition:
+      color 160ms var(--ease-out-quart),
+      border-color 160ms var(--ease-out-quart);
+  }
+
+  .adapters__link:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent-dim);
+  }
+
+  .adapters__link-icon {
+    opacity: 0;
+    transform: translate(-2px, 2px);
+    transition:
+      opacity 160ms var(--ease-out-quart),
+      transform 200ms var(--ease-spring);
+  }
+
+  .adapters__link:hover .adapters__link-icon,
+  .adapters__link:focus-visible .adapters__link-icon {
+    opacity: 1;
+    transform: translate(0, 0);
   }
 
   .adapters__lang,
